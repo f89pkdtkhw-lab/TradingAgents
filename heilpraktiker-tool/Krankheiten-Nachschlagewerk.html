@@ -1,0 +1,1394 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cut">
+<title>Krankheiten Nachschlagewerk</title>
+<meta name="description" content="Offline-Nachschlagewerk für Heilpraktiker: Definition, Organsystem, Ursachen, Symptome, Komplikationen, Differentialdiagnosen, Laborwerte, Notfälle und Behandlungsverbote.">
+<style>
+:root{
+  --bg:#f6f4ef; --surface:#ffffff; --surface2:#efece5; --text:#1f2328; --muted:#5d6670;
+  --line:#ddd8cc; --accent:#2f6f5e; --accent-weak:#e1eee9;
+  --red:#b42318; --red-weak:#fde8e6; --amber:#9a5b00; --amber-weak:#fff3d6;
+  --violet:#5b3a9e; --violet-weak:#eee8fa; --shadow:0 1px 2px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.05);
+  --fs:17px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15181b; --surface:#1d2125; --surface2:#262b30; --text:#e8eaed; --muted:#a2aab3;
+    --line:#343a41; --accent:#6cc4a8; --accent-weak:#1f3530;
+    --red:#ff7a6e; --red-weak:#3a1f1d; --amber:#f0b54a; --amber-weak:#352a14;
+    --violet:#b79cf5; --violet-weak:#2b2340; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15181b; --surface:#1d2125; --surface2:#262b30; --text:#e8eaed; --muted:#a2aab3;
+  --line:#343a41; --accent:#6cc4a8; --accent-weak:#1f3530;
+  --red:#ff7a6e; --red-weak:#3a1f1d; --amber:#f0b54a; --amber-weak:#352a14;
+  --violet:#b79cf5; --violet-weak:#2b2340; --shadow:none;
+}
+*{box-sizing:border-box}
+html{font-size:var(--fs);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.5}
+button,input,select{font:inherit;color:inherit}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+header.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+.titlebar{display:flex;align-items:center;gap:10px;padding:10px 0 6px}
+.titlebar h1{font-size:1.15rem;margin:0;flex:1;letter-spacing:-.01em}
+.iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:6px 10px;cursor:pointer;min-width:40px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{white-space:nowrap;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;cursor:pointer;font-weight:600;font-size:.92rem}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .tab[aria-selected="true"]{color:#0d1a16}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tab[aria-selected="true"]{color:#0d1a16}}
+.search{display:flex;gap:8px;padding-bottom:10px}
+.search input{flex:1;min-width:0;border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 14px;font-size:1rem}
+.search input:focus{outline:none;border-color:var(--accent)}
+.filters{display:flex;flex-wrap:wrap;gap:6px;padding-bottom:10px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 11px;font-size:.84rem;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent-weak);border-color:var(--accent);color:var(--accent);font-weight:600}
+.chip.red[aria-pressed="true"]{background:var(--red-weak);border-color:var(--red);color:var(--red)}
+.chip.violet[aria-pressed="true"]{background:var(--violet-weak);border-color:var(--violet);color:var(--violet)}
+select.cat{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 10px;font-size:.84rem;max-width:100%}
+main{padding:14px 0 60px}
+.count{color:var(--muted);font-size:.85rem;margin:0 0 10px}
+.list{display:grid;gap:10px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow);cursor:pointer;text-align:left;width:100%}
+.card:hover{border-color:var(--accent)}
+.card h3{margin:0 0 2px;font-size:1.02rem}
+.card .meta{color:var(--muted);font-size:.82rem}
+.card .ls{margin:6px 0 0;font-size:.9rem;color:var(--text);opacity:.9;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.badge{font-size:.74rem;font-weight:700;border-radius:6px;padding:2px 7px;letter-spacing:.01em}
+.b-red{background:var(--red-weak);color:var(--red)}
+.b-amber{background:var(--amber-weak);color:var(--amber)}
+.b-violet{background:var(--violet-weak);color:var(--violet)}
+.b-cat{background:var(--surface2);color:var(--muted)}
+/* Detail */
+.detail{position:fixed;inset:0;z-index:50;background:var(--bg);overflow-y:auto;display:none}
+.detail.open{display:block}
+.dhead{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top);z-index:2}
+.dhead .wrap{display:flex;align-items:center;gap:10px;padding-top:10px;padding-bottom:10px}
+.dhead h2{margin:0;font-size:1.15rem;flex:1;line-height:1.25}
+.dbody{padding:14px 0 70px}
+.alias{color:var(--muted);font-size:.9rem;margin:0 0 10px}
+.alert{border-radius:12px;padding:10px 14px;margin:10px 0;border:1.5px solid}
+.alert h4{margin:0 0 4px;font-size:.95rem}
+.alert p{margin:0;font-size:.93rem}
+.alert.red{background:var(--red-weak);border-color:var(--red)}
+.alert.red h4{color:var(--red)}
+.alert.amber{background:var(--amber-weak);border-color:var(--amber)}
+.alert.amber h4{color:var(--amber)}
+.alert.violet{background:var(--violet-weak);border-color:var(--violet)}
+.alert.violet h4{color:var(--violet)}
+.sec{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0}
+.sec h4{margin:0 0 6px;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+.sec h4 .num{display:inline-block;min-width:1.4em}
+.sec p{margin:0}
+.sec ul{margin:0;padding-left:1.15em}
+.sec li{margin:2px 0}
+.ls-box{background:var(--accent-weak);border-radius:10px;padding:8px 12px;margin-top:8px;font-weight:600}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:0 0 12px}
+.panel h3{margin:0 0 8px;font-size:1.05rem}
+.panel p,.panel li{font-size:.95rem}
+.panel ul,.panel ol{padding-left:1.2em;margin:6px 0}
+table.t{width:100%;border-collapse:collapse;font-size:.9rem}
+table.t th,table.t td{border-top:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+table.t th{color:var(--muted);font-weight:600;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em}
+.tscroll{overflow-x:auto}
+a.lnk{color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.big112{font-size:1.6rem;font-weight:800;color:var(--red)}
+.grp{margin:16px 0 6px;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.flash{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
+.flash h3{margin:0 0 4px;font-size:1.3rem}
+.revbtns{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.btn{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:10px;padding:8px 14px;cursor:pointer;font-weight:600}
+.btn.ghost{background:transparent;color:var(--accent)}
+.empty{color:var(--muted);text-align:center;padding:30px 0}
+.disc{font-size:.8rem;color:var(--muted);margin-top:20px;line-height:1.45}
+mark{background:var(--amber-weak);color:inherit;border-radius:3px;padding:0 1px}
+.fav{border:none;background:none;font-size:1.3rem;cursor:pointer;padding:4px;line-height:1}
+@media (min-width:720px){.list{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="titlebar">
+      <h1>🩺 Krankheiten-Nachschlagewerk</h1>
+      <button class="iconbtn" id="fsMinus" title="Schrift kleiner" aria-label="Schrift kleiner">A−</button>
+      <button class="iconbtn" id="fsPlus" title="Schrift größer" aria-label="Schrift größer">A+</button>
+      <button class="iconbtn" id="themeBtn" title="Hell/Dunkel" aria-label="Hell/Dunkel umschalten">◐</button>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" data-tab="liste" aria-selected="true">📚 Erkrankungen</button>
+      <button class="tab" role="tab" data-tab="notfall" aria-selected="false">🚨 Notfälle</button>
+      <button class="tab" role="tab" data-tab="verbot" aria-selected="false">⛔ Behandlungsverbote</button>
+      <button class="tab" role="tab" data-tab="lern" aria-selected="false">🃏 Lernkarten</button>
+      <button class="tab" role="tab" data-tab="labor" aria-selected="false">🧪 Laborwerte</button>
+    </div>
+    <div id="listControls">
+      <div class="search"><input id="q" type="search" placeholder="Suche: Name, Symptom, Laborwert … z. B. „Brustschmerz“" autocomplete="off"></div>
+      <div class="filters">
+        <select class="cat" id="catSel" aria-label="Organsystem"></select>
+        <button class="chip red" id="fNot" aria-pressed="false">🚨 Notfall</button>
+        <button class="chip violet" id="fBv" aria-pressed="false">⛔ Behandlungsverbot</button>
+        <button class="chip" id="fFav" aria-pressed="false">★ Gemerkt</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="main"></main>
+
+<section class="detail" id="detail" aria-modal="true" role="dialog">
+  <div class="dhead"><div class="wrap">
+    <button class="iconbtn" id="back" aria-label="Zurück">←</button>
+    <h2 id="dTitle"></h2>
+    <button class="fav" id="dFav" aria-label="Merken">☆</button>
+  </div></div>
+  <div class="wrap dbody" id="dBody"></div>
+</section>
+
+<script>
+window.D = window.D || [];
+var D = window.D;
+window.CATS = {
+  herz:"Herz & Kreislauf",
+  gefaess:"Gefäße (Arterien, Venen, Lymphe)",
+  lunge:"Atmungssystem",
+  verdauung:"Verdauungstrakt",
+  leber:"Leber, Galle & Pankreas",
+  niere:"Niere, Harnwege & männl. Geschlechtsorgane",
+  endokrin:"Hormone & Stoffwechsel",
+  blut:"Blut & Lymphatisches System",
+  bewegung:"Bewegungsapparat & Rheuma",
+  nerven:"Nervensystem",
+  psyche:"Psychiatrie",
+  haut:"Haut",
+  infekt:"Infektionskrankheiten",
+  sti:"Sexuell übertragbare Krankheiten",
+  auge:"Auge",
+  hno:"Hals-Nasen-Ohren",
+  gyn:"Gynäkologie & Schwangerschaft",
+  allg:"Allgemeine Notfälle & Sonstiges"
+};
+// Textbausteine Rechtsgrundlage
+var BV6 = "§ 24 IfSG i. V. m. § 6 Abs. 1 Nr. 1 IfSG (namentlich meldepflichtig bei Verdacht, Erkrankung und Tod) • Heilpraktiker ist selbst meldepflichtig (§ 8 IfSG) → Meldung an das Gesundheitsamt, Patient an Arzt verweisen";
+var BV7 = "§ 24 IfSG i. V. m. § 7 IfSG (labormeldepflichtiger Erreger) • Behandlung und Erregernachweis nur durch Ärzte → Patient an Arzt verweisen";
+var BV34 = "§ 24 IfSG i. V. m. § 34 Abs. 1 IfSG (Krankheit in Gemeinschaftseinrichtungen) • Besuchsverbot für Schule/Kita bis zur Nicht-Ansteckungsfähigkeit";
+var BVSTI = "§ 24 IfSG: „sonstige sexuell übertragbare Krankheit“ – Behandlung nur durch Ärzte • Partner mitbehandeln lassen";
+var BVGE = "§ 24 IfSG i. V. m. § 6 Abs. 1 Nr. 2 IfSG (akute infektiöse Gastroenteritis bei Lebensmittel-Beschäftigten oder ≥ 2 Fällen mit Zusammenhang) und § 7 IfSG (Erregernachweis)";
+
+window.LABOR = [
+ {g:"Blutbild", r:[
+  ["Hämoglobin (Hb)","♀ 12–16 g/dl • ♂ 14–18 g/dl","Polyglobulie, Polycythaemia vera, Exsikkose, Höhenaufenthalt, Rauchen","Anämie (Eisen-, B12-, Folsäuremangel, Blutung, Hämolyse, Niereninsuffizienz)"],
+  ["Erythrozyten","♀ 4,0–5,2 /pl • ♂ 4,5–5,9 /pl","Polyglobulie, Exsikkose","Anämie, Überwässerung"],
+  ["Hämatokrit","♀ 37–47 % • ♂ 40–52 %","Exsikkose, Polyglobulie","Anämie, Überwässerung"],
+  ["MCV","80–96 fl","makrozytär: Vit.-B12-/Folsäuremangel, Alkohol, Lebererkrankung","mikrozytär: Eisenmangel, Thalassämie, chron. Entzündung"],
+  ["MCH (HbE)","27–33 pg","hyperchrom: B12-/Folsäuremangel","hypochrom: Eisenmangel, Thalassämie"],
+  ["Leukozyten","4.000–10.000 /µl","bakt. Infektion, Entzündung, Leukämie, Stress, Kortison, Herzinfarkt","Virusinfekt, Typhus, Agranulozytose, Knochenmarkschädigung, Zytostatika, SLE"],
+  ["Thrombozyten","150.000–400.000 /µl","reaktiv (Entzündung, Blutung, Eisenmangel), ess. Thrombozythämie, CML","ITP, DIC, Leukämie, Hypersplenismus, Heparin (HIT), Leberzirrhose"],
+  ["Retikulozyten","0,5–2 % (5–20 ‰)","Hämolyse, nach Blutung, Therapie eines Mangels","aplastische Anämie, B12-/Eisenmangel unbehandelt, Niereninsuffizienz"],
+  ["Lymphozyten","20–40 %","Virusinfekte, CLL, Pertussis, Tbc","HIV, Kortison, Hodgkin, Immunsuppression"],
+  ["Eosinophile","1–4 %","Allergie, Asthma, Wurmbefall, Neurodermitis, Morbus Addison","Kortison, Cushing, Typhus, akuter Stress"]
+ ]},
+ {g:"Entzündung", r:[
+  ["CRP","< 5 mg/l","bakterielle Infektion (stark), Entzündung, Trauma, Herzinfarkt, Tumor","–"],
+  ["BSG (Blutsenkung)","♀ < 20 mm/h • ♂ < 15 mm/h (1. Std.)","Entzündung, Tumor, Plasmozytom (Sturzsenkung), Riesenzellarteriitis, Anämie, Schwangerschaft","Polyglobulie, Sichelzellanämie"],
+  ["Procalcitonin (PCT)","< 0,5 ng/ml","bakterielle Sepsis","–"]
+ ]},
+ {g:"Niere & Elektrolyte", r:[
+  ["Kreatinin","♀ 0,5–0,9 mg/dl • ♂ 0,7–1,2 mg/dl","Niereninsuffizienz (erst ab ~50 % GFR-Verlust!), Muskelmasse ↑, Exsikkose","geringe Muskelmasse, Schwangerschaft"],
+  ["GFR (eGFR)","> 90 ml/min/1,73 m²","Schwangerschaft, früher Diabetes (Hyperfiltration)","Niereninsuffizienz (Stadien G1–G5)"],
+  ["Harnstoff","10–50 mg/dl","Niereninsuffizienz, Exsikkose, GI-Blutung, Eiweißzufuhr","Leberinsuffizienz, eiweißarme Kost"],
+  ["Harnsäure","♀ 2,4–5,7 mg/dl • ♂ 3,4–7,0 mg/dl","Gicht, Zellzerfall (Tumor, Chemo), Niereninsuffizienz, Alkohol, Diuretika","–"],
+  ["Natrium","135–145 mmol/l","Exsikkose, Diabetes insipidus, Conn","SIADH, Diuretika, Herz-/Leberinsuffizienz, Addison, Erbrechen, Polydipsie"],
+  ["Kalium","3,5–5,0 mmol/l","Niereninsuffizienz, Addison, Azidose, Hämolyse, ACE-Hemmer, kaliumsparende Diuretika","Diuretika, Erbrechen/Durchfall, Conn, Cushing, Insulin, Laxantien"],
+  ["Calcium (gesamt)","2,2–2,65 mmol/l","prim. Hyperparathyreoidismus, Tumor/Knochenmetastasen, Sarkoidose, Vit.-D-Überdosis","Hypoparathyreoidismus, Vit.-D-Mangel, Niereninsuffizienz, Pankreatitis"],
+  ["Phosphat","0,8–1,5 mmol/l","Niereninsuffizienz, Hypoparathyreoidismus","prim. Hyperparathyreoidismus, Vit.-D-Mangel"]
+ ]},
+ {g:"Leber, Galle, Pankreas", r:[
+  ["GPT (ALT)","♀ < 35 U/l • ♂ < 50 U/l","Hepatitis (stark, GPT > GOT), Fettleber, Medikamente","–"],
+  ["GOT (AST)","♀ < 35 U/l • ♂ < 50 U/l","Leberzellschaden (GOT > GPT → Alkohol, Zirrhose), Herzinfarkt, Muskelschaden","–"],
+  ["γ-GT","♀ < 40 U/l • ♂ < 60 U/l","Alkohol, Cholestase, Fettleber, Medikamente (Enzyminduktion)","–"],
+  ["Alkalische Phosphatase (AP)","40–130 U/l","Cholestase, Knochenumbau (M. Paget, Metastasen, Wachstum), Schwangerschaft","–"],
+  ["Bilirubin gesamt","< 1,1 mg/dl (Ikterus ab ~2 mg/dl)","Hämolyse (indirekt), Hepatitis/Zirrhose, Verschluss (direkt), M. Meulengracht","–"],
+  ["Albumin","3,5–5,0 g/dl","Exsikkose","Leberzirrhose, nephrotisches Syndrom, Mangelernährung, Entzündung"],
+  ["Quick (INR)","Quick 70–120 % • INR ~1,0","INR ↑ / Quick ↓: Marcumar, Vit.-K-Mangel, Leberinsuffizienz, DIC","–"],
+  ["Lipase","< 60 U/l","akute Pankreatitis (≥ 3-fach), Pankreaskarzinom, Niereninsuffizienz","–"],
+  ["Amylase","< 100 U/l","Pankreatitis, Parotitis (Mumps), Niereninsuffizienz","–"],
+  ["Ammoniak","< 50 µg/dl","hepatische Enzephalopathie, Leberkoma","–"]
+ ]},
+ {g:"Herz & Muskel", r:[
+  ["Troponin T/I (hs)","laborabhängig, sehr niedrig","Herzinfarkt (ab ~3 Std., bis 2 Wo.), Myokarditis, Lungenembolie, Niereninsuffizienz","–"],
+  ["CK / CK-MB","CK ♀ < 170 U/l • ♂ < 190 U/l","Herzinfarkt (CK-MB > 6 %), Muskeltrauma, Sport, i.m.-Spritze, Rhabdomyolyse, Statine","–"],
+  ["NT-proBNP","< 125 pg/ml (alters­abhängig)","Herzinsuffizienz, Lungenembolie, Niereninsuffizienz","–"],
+  ["D-Dimere","< 0,5 mg/l","Thrombose, Lungenembolie, DIC, Aortendissektion, OP, Schwangerschaft, Tumor (negativer Wert schließt Thrombose weitgehend aus)","–"],
+  ["LDH","< 250 U/l","Hämolyse, Herzinfarkt (spät), Lymphom/Tumor, Lungenembolie, Mononukleose","–"]
+ ]},
+ {g:"Stoffwechsel & Hormone", r:[
+  ["Glukose nüchtern","70–99 mg/dl (100–125 = gestörte Nüchternglukose)","Diabetes mellitus (≥ 126 mg/dl), Cushing, Stress, Kortison","Hypoglykämie (< 50 mg/dl), Insulinom, Addison, Alkohol"],
+  ["HbA1c","< 5,7 % (Diabetes ≥ 6,5 %)","Diabetes (Langzeitwert ~8–12 Wochen)","Hämolyse, Blutverlust"],
+  ["TSH","0,4–4,0 mU/l","Hypothyreose (primär), Hashimoto","Hyperthyreose (Basedow, Autonomie), Überdosierung L-Thyroxin"],
+  ["fT4 / fT3","fT4 0,9–1,7 ng/dl • fT3 2,0–4,4 pg/ml","Hyperthyreose","Hypothyreose"],
+  ["Gesamtcholesterin","< 200 mg/dl","Hypercholesterinämie, Hypothyreose, nephrot. Syndrom, Cholestase","Hyperthyreose, Mangelernährung, Leberinsuffizienz"],
+  ["LDL / HDL","LDL < 116 (Risiko-abhängig) • HDL > 40 mg/dl","LDL ↑: Atheroskleroserisiko","HDL ↓: Atheroskleroserisiko"],
+  ["Triglyzeride","< 150 mg/dl","Diabetes, Alkohol, Adipositas, Pankreatitis-Risiko (> 1000)","–"],
+  ["Ferritin","♀ 15–150 µg/l • ♂ 30–400 µg/l","Hämochromatose, Entzündung (Akute-Phase-Protein), Tumor, Lebererkrankung","Eisenmangel (sensitivster Marker)"],
+  ["Vitamin B12","200–900 pg/ml","–","perniziöse Anämie, Veganer, Magen-OP, M. Crohn (terminales Ileum), Metformin"],
+  ["Kortisol (morgens)","5–25 µg/dl","Cushing, Stress, Kortisoneinnahme (exogen: Kortisol ↓!)","Addison, Hypophyseninsuffizienz"]
+ ]},
+ {g:"Urin", r:[
+  ["Urin-Stix Leukozyten/Nitrit","negativ","Harnwegsinfekt (Nitrit + = gramnegative Bakterien)","–"],
+  ["Urin-Stix Eiweiß","negativ (< 150 mg/24 h)","Glomerulonephritis, nephrot. Syndrom (> 3,5 g/24 h), diab. Nephropathie (Mikroalbuminurie 30–300 mg/24 h), Fieber","–"],
+  ["Urin-Stix Blut","negativ","Nierenstein, Tumor, Glomerulonephritis, HWI, Menstruation; Myoglobin/Hämoglobin","–"],
+  ["Urin-Glukose","negativ","Diabetes (Nierenschwelle ~180 mg/dl), Schwangerschaft","–"],
+  ["Urin-Ketone","negativ","diabetische Ketoazidose, Hunger, Alkohol, Erbrechen","–"]
+ ]},
+ {g:"Immunologie & Tumormarker", r:[
+  ["Rheumafaktor","negativ","rheumatoide Arthritis (~70–80 %), Sjögren, auch gesunde Ältere","–"],
+  ["Anti-CCP","negativ","rheumatoide Arthritis (hochspezifisch, früh)","–"],
+  ["ANA","negativ (< 1:160)","SLE (~95 %), Sklerodermie, Sjögren, Mischkollagenose, Medikamente","–"],
+  ["Anti-ds-DNA","negativ","Systemischer Lupus erythematodes (spezifisch)","–"],
+  ["HLA-B27","negativ","M. Bechterew (~90 %), reaktive Arthritis, Uveitis","–"],
+  ["PSA","< 4 ng/ml (altersabh.)","Prostatakarzinom, BPH, Prostatitis, nach Untersuchung/Radfahren","–"],
+  ["CEA","< 5 ng/ml","kolorektales Karzinom (Verlaufsmarker), Raucher","–"],
+  ["AFP","< 10 ng/ml","Leberzellkarzinom, Keimzelltumoren (Hoden), Schwangerschaft","–"],
+  ["CA 19-9 / CA 125 / CA 15-3","laborabhängig","Pankreas-/Gallenkarzinom • Ovarialkarzinom • Mammakarzinom (Verlauf)","–"]
+ ]}
+];
+
+D.push(
+{n:"Koronare Herzkrankheit (KHK) / Angina pectoris",a:"Stenokardie, Brustenge",k:"herz",
+d:"Manifestation der Arteriosklerose an den Herzkranzgefäßen mit Missverhältnis zwischen Sauerstoffangebot und -bedarf des Herzmuskels (Myokardischämie).",
+u:"Arteriosklerose der Koronarien • Risikofaktoren: Rauchen, Hypertonie, Diabetes, Hypercholesterinämie, Adipositas, Bewegungsmangel, familiäre Belastung, männliches Geschlecht, Alter • Auslöser des Anfalls: Belastung, Kälte, Stress, schwere Mahlzeiten",
+s:"Retrosternaler Druck-/Engegefühl, Brennen • Ausstrahlung in linken Arm, Hals, Unterkiefer, Rücken, Oberbauch • Dauer meist < 20 Min. • Besserung in Ruhe oder nach Nitro innerhalb von Minuten • Atemnot, Angst • Stabile AP: belastungsabhängig, gleichbleibend • Instabile AP: neu, zunehmend, in Ruhe → Notfall (akutes Koronarsyndrom)",
+l:"Belastungsabhängiger retrosternaler Schmerz, der in Ruhe/nach Nitro nachlässt",
+ko:"Herzinfarkt • Herzrhythmusstörungen • Herzinsuffizienz • plötzlicher Herztod",
+dd:"Herzinfarkt • Lungenembolie • Aortendissektion • Perikarditis • Refluxösophagitis • Ösophagusspasmus • BWS-Syndrom/Interkostalneuralgie • Gallenkolik • Panikattacke • Pneumothorax",
+b:"Ruhe-EKG oft unauffällig, Belastungs-EKG: ST-Senkung • Troponin bei stabiler AP normal (↑ → Infarkt) • Lipide, BZ/HbA1c • Echokardiografie, Koronarangiografie",
+nf:1,nfm:"Instabile Angina pectoris (Ruheschmerz, Crescendo, erstmalig) = akutes Koronarsyndrom → 112, Oberkörper hoch, beengende Kleidung öffnen, nicht belasten, beruhigen."},
+
+{n:"Herzinfarkt",a:"Myokardinfarkt, akutes Koronarsyndrom, STEMI, NSTEMI",k:"herz",
+d:"Absterben (Nekrose) von Herzmuskelgewebe durch akuten Verschluss eines Herzkranzgefäßes, meist durch Thrombus auf rupturierter arteriosklerotischer Plaque.",
+u:"KHK/Arteriosklerose mit Plaqueruptur und Thrombose • Risikofaktoren wie bei KHK • selten Koronarspasmus, Embolie",
+s:"Starker, anhaltender (> 20 Min.) retrosternaler Vernichtungsschmerz • Ausstrahlung in linken Arm, Kiefer, Rücken, Oberbauch • keine Besserung durch Ruhe oder Nitro • Todesangst, kalter Schweiß, Blässe • Übelkeit, Erbrechen • Atemnot • Rhythmusstörungen, Blutdruckabfall • Bei Frauen, Älteren und Diabetikern oft atypisch/stumm (nur Oberbauchschmerz, Übelkeit, Schwäche)",
+l:"Vernichtungsschmerz hinter dem Brustbein > 20 Min., nitroresistent, mit Todesangst",
+ko:"Kammerflimmern/plötzlicher Herztod (häufigste Todesursache in den ersten Stunden) • kardiogener Schock • akute Herzinsuffizienz/Lungenödem • Herzwandruptur, Papillarmuskelabriss • Herzwandaneurysma • Perikarditis (Dressler-Syndrom) • Thromboembolien",
+dd:"Instabile Angina pectoris • Lungenembolie • Aortendissektion • Spannungspneumothorax • Perikarditis • akute Pankreatitis • Gallenkolik • Ulkusperforation • Ösophagusruptur",
+b:"Troponin T/I ↑ (ab ca. 3 Std.) • CK, CK-MB ↑ (4–6 Std.) • GOT, LDH ↑ (später) • Leukozytose, BSG/CRP ↑ • EKG: ST-Hebung (STEMI), T-Negativierung, pathologisches Q",
+nf:2,nfm:"Sofort 112 (Verdacht reicht!) • Oberkörper hochlagern, Patient nicht laufen lassen • beengende Kleidung öffnen, beruhigen, Fenster öffnen • Vitalzeichen überwachen, nicht allein lassen • keine i.m.-Spritzen (Lyse!) • bei Kreislaufstillstand sofort Reanimation 30:2, AED"},
+
+{n:"Herzinsuffizienz",a:"Herzschwäche, Linksherz-/Rechtsherzinsuffizienz",k:"herz",
+d:"Unfähigkeit des Herzens, den Körper ausreichend mit Blut (Sauerstoff) zu versorgen bzw. den venösen Rückstrom aufzunehmen. Einteilung nach NYHA I–IV.",
+u:"KHK/Herzinfarkt • arterielle Hypertonie • Herzklappenfehler • Kardiomyopathien, Myokarditis • Herzrhythmusstörungen • Rechtsherz: meist Folge der Linksherzinsuffizienz, Cor pulmonale (COPD, Lungenembolie, pulmonale Hypertonie) • Pathophysiologie: Rückstau vor dem geschwächten Ventrikel, Vorwärtsversagen, Aktivierung von RAAS und Sympathikus",
+s:"Linksherz (Rückstau in die Lunge): Belastungs-/Ruhedyspnoe, Orthopnoe (nachts mit erhöhtem Oberkörper), nächtlicher Husten, Asthma cardiale, feuchte Rasselgeräusche, Zyanose • Rechtsherz (Rückstau in den Körperkreislauf): Beinödeme (abends, symmetrisch, eindrückbar), gestaute Halsvenen, Leberstauung (Druckschmerz rechter Oberbauch), Aszites, Stauungsgastritis, Gewichtszunahme • Allgemein: Leistungsminderung, Müdigkeit, Nykturie, Tachykardie",
+l:"Belastungsdyspnoe, Orthopnoe, Beinödeme, Nykturie",
+ko:"Akutes Lungenödem • kardiogener Schock • Rhythmusstörungen, plötzlicher Herztod • Thromboembolien • Niereninsuffizienz (kardiorenales Syndrom) • Pleuraergüsse • Stauungsleber/Cirrhose cardiaque",
+dd:"COPD/Asthma • Lungenembolie • Pneumonie • Ödeme anderer Ursache: Niereninsuffizienz, nephrotisches Syndrom, Leberzirrhose, Hypothyreose (Myxödem), Venenschwäche, Lymphödem, Medikamente (Kalziumantagonisten) • Anämie",
+b:"NT-proBNP/BNP ↑ • Kreatinin, Harnstoff, Na/K (Diuretika!) • Blutbild (Anämie?) • TSH • Echokardiografie (Ejektionsfraktion), EKG, Röntgen-Thorax",
+nf:1,nfm:"Akute Dekompensation mit Ruhedyspnoe/Lungenödem → 112, Oberkörper hoch, Beine tief (Herzbett), beruhigen."},
+
+{n:"Akutes Lungenödem",a:"Asthma cardiale",k:"herz",
+d:"Akute Flüssigkeitsansammlung im Lungengewebe/in den Alveolen, meist durch Linksherzversagen mit Rückstau in den Lungenkreislauf.",
+u:"Kardial (häufig): akute Linksherzinsuffizienz (Herzinfarkt, hypertensive Krise, Rhythmusstörung, Mitralklappenfehler) • Nicht kardial: Überwässerung (Niereninsuffizienz, Infusion), toxisch (Reizgase), Höhenlungenödem, ARDS, Hypoalbuminämie",
+s:"Schwerste Atemnot, Orthopnoe (Patient sitzt aufrecht) • Brodelndes Atemgeräusch („Kochen auf der Brust“), auf Distanz hörbar • schaumig-rötlicher Auswurf • Zyanose, Kaltschweißigkeit • Tachykardie, Todesangst, Unruhe • Husten",
+l:"Schwerste Atemnot mit brodelndem Atemgeräusch und schaumigem Sputum",
+ko:"Respiratorische Insuffizienz • Hypoxie, Kreislaufversagen • Tod",
+dd:"Status asthmaticus (trockenes Giemen statt Rasseln) • Lungenembolie • Pneumonie • Anaphylaxie • Pneumothorax • Aspiration",
+b:"BNP ↑ • Blutgase: pO2 ↓ • Troponin (Infarkt?) • Röntgen: Schmetterlingsödem, Kerley-B-Linien",
+nf:2,nfm:"112 • Oberkörper hoch, Beine tief (Herzbett) • beengende Kleidung öffnen, Fenster öffnen, beruhigen • ggf. unblutiger Aderlass (Stauschlauch an 3 Extremitäten, alle 10–15 Min. rotieren) • Vitalzeichen überwachen"},
+
+{n:"Arterielle Hypertonie",a:"Bluthochdruck",k:"herz",
+d:"Dauerhaft erhöhter Blutdruck ≥ 140/90 mmHg (Praxismessung, mehrfach). Häufigste Herz-Kreislauf-Erkrankung, lange symptomlos („stiller Killer“).",
+u:"Primär/essenziell (~90 %): genetisch, Übergewicht, Salz, Alkohol, Bewegungsmangel, Stress, Alter • Sekundär (~10 %): renal (Nierenarterienstenose, Glomerulonephritis), endokrin (Conn, Cushing, Phäochromozytom, Hyperthyreose), Aortenisthmusstenose, Schlafapnoe, Medikamente (Pille, NSAR, Kortison), Schwangerschaft",
+s:"Oft symptomlos • Morgendlicher Hinterkopfschmerz • Schwindel, Ohrensausen, Nasenbluten • Herzklopfen, Belastungsdyspnoe • Gesichtsröte, Unruhe, Schlafstörungen • Sehstörungen",
+l:"Meist symptomlos – Diagnose durch Messung (≥ 140/90 mmHg)",
+ko:"Hypertensiver Notfall • Arteriosklerose → KHK, Herzinfarkt, pAVK • Linksherzhypertrophie, Herzinsuffizienz • Schlaganfall, Hirnblutung • hypertensive Nephropathie → Niereninsuffizienz • Retinopathie • Aortenaneurysma/-dissektion",
+dd:"Weißkittelhypertonie • sekundäre Hypertonieformen (s. Ursachen) abklären • Messfehler (Manschette zu klein)",
+b:"Kreatinin/GFR, Kalium (↓ bei Conn) • Urinstatus/Albumin • BZ, Lipide • TSH • ggf. Aldosteron-Renin-Quotient, Metanephrine, Kortisol • 24-Std.-Blutdruckmessung, EKG, Echo, Augenhintergrund",
+nf:1,nfm:"Blutdruck > 180/120 mmHg MIT Organsymptomen (Brustschmerz, Atemnot, Lähmung, Sehstörung, Verwirrtheit) = hypertensiver Notfall → 112."},
+
+{n:"Hypertensiver Notfall / hypertensive Krise",a:"Hochdruckkrise, hypertensive Entgleisung",k:"herz",
+d:"Kritischer Blutdruckanstieg (meist > 180/120 mmHg). Hypertensive Dringlichkeit: ohne Organschäden. Hypertensiver Notfall: mit akuten Organschäden – lebensbedrohlich.",
+u:"Unzureichend behandelte Hypertonie, abgesetzte Medikamente • Phäochromozytom • Präeklampsie • Nierenerkrankungen • Drogen (Kokain, Amphetamine) • Schmerzen, Stress, Alkoholentzug",
+s:"Starker Kopfschmerz, Schwindel • Sehstörungen, Ohrensausen • Übelkeit, Erbrechen • Nasenbluten • Brustschmerz, Atemnot (Lungenödem) • neurologische Ausfälle, Verwirrtheit, Krämpfe (hypertensive Enzephalopathie)",
+l:"RR > 180/120 mmHg mit Kopfschmerz, Seh- oder neurologischen Störungen",
+ko:"Schlaganfall, Hirnblutung • Lungenödem • Herzinfarkt • Aortendissektion • akutes Nierenversagen • Eklampsie",
+dd:"Schlaganfall mit reaktiver RR-Erhöhung • Subarachnoidalblutung • Angst-/Schmerzreaktion • Migräne",
+b:"Kreatinin, Elektrolyte • Troponin • Urin (Eiweiß, Blut) • Blutbild",
+nf:2,nfm:"112 • Oberkörper hoch lagern, beruhigen • Blutdruck regelmäßig kontrollieren • NICHT zu schnell senken (max. 25 % in der 1. Stunde) – das macht der Notarzt"},
+
+{n:"Arterielle Hypotonie",a:"niedriger Blutdruck, orthostatische Dysregulation",k:"herz",
+d:"Blutdruck dauerhaft < 100/60 mmHg mit Beschwerden. Orthostatische Hypotonie: Blutdruckabfall beim Aufstehen (≥ 20 mmHg systolisch in 3 Min.).",
+u:"Primär/konstitutionell: junge, schlanke Frauen • Sekundär: Herzinsuffizienz, Herzrhythmusstörungen, Aortenstenose, Hypovolämie (Blutung, Durchfall, Exsikkose), Addison, Hypothyreose, Medikamente (Antihypertensiva, Diuretika, Psychopharmaka), Varikose, Polyneuropathie (Diabetes), Parkinson • Langes Liegen",
+s:"Schwindel, Schwarzwerden vor Augen beim Aufstehen • Müdigkeit, Konzentrationsschwäche • kalte Hände/Füße • Kopfschmerzen • Ohrensausen • Synkope (Ohnmacht)",
+l:"Schwindel/Schwarzsehen beim Aufstehen",
+ko:"Synkope mit Sturz und Verletzung • Minderdurchblutung von Herz/Gehirn bei älteren Menschen",
+dd:"Herzrhythmusstörungen • Aortenstenose • Hypoglykämie • Anämie • Epilepsie • vasovagale Synkope • Schock",
+b:"Blutbild (Anämie) • Elektrolyte, Kreatinin • BZ • TSH, Kortisol (Addison) • Schellong-Test, Langzeit-EKG",
+nf:0},
+
+{n:"Vorhofflimmern",a:"Absolute Arrhythmie, AF",k:"herz",
+d:"Häufigste anhaltende Herzrhythmusstörung: unkoordinierte, schnelle Vorhoferregung (350–600/min), unregelmäßige Überleitung auf die Kammern → absolute Arrhythmie.",
+u:"Hypertonie • KHK, Herzinsuffizienz • Herzklappenfehler (v. a. Mitralklappe) • Hyperthyreose • Alkohol („Holiday heart“) • Alter • Schlafapnoe, Adipositas • Elektrolytstörungen • Lungenembolie",
+s:"Unregelmäßiger, oft schneller Puls • Herzstolpern, Herzrasen • Pulsdefizit (Herzfrequenz > tastbarer Puls) • Leistungsminderung, Atemnot • Schwindel, Angst • Polyurie • häufig auch symptomlos",
+l:"Völlig unregelmäßiger Puls mit Pulsdefizit",
+ko:"Thrombenbildung im linken Vorhofohr → Embolie: Schlaganfall (!), Mesenterialinfarkt, akuter Extremitätenverschluss • Herzinsuffizienz (Tachymyopathie)",
+dd:"Vorhofflattern • Extrasystolen • Sinustachykardie • andere Tachykardien",
+b:"TSH (Hyperthyreose!) • Elektrolyte (K, Mg) • Kreatinin • BNP • EKG: fehlende P-Wellen, unregelmäßige RR-Abstände • Echo",
+nf:1,nfm:"Bei Brustschmerz, Atemnot, Bewusstseinsstörung oder Schlaganfallzeichen → 112."},
+
+{n:"Kammerflimmern / Herz-Kreislauf-Stillstand",a:"Plötzlicher Herztod, Asystolie, Kammerflattern",k:"herz",
+d:"Ungeordnete, hochfrequente Erregung der Herzkammern ohne effektiven Auswurf → funktioneller Kreislaufstillstand. Ohne Reanimation tritt nach 3–5 Min. ein irreversibler Hirnschaden ein.",
+u:"Herzinfarkt/KHK (häufigste Ursache) • Kardiomyopathie, Myokarditis • Elektrolytstörungen (Kalium) • Stromunfall • Medikamente/Drogen • Long-QT-Syndrom • Ertrinken, Unterkühlung • Lungenembolie, Spannungspneumothorax",
+s:"Plötzliche Bewusstlosigkeit • keine normale Atmung (Schnappatmung!) • kein tastbarer Puls (Karotis) • Zyanose/grau-blasse Haut • weite, lichtstarre Pupillen (nach ca. 1 Min.) • ggf. Krampfanfall",
+l:"Bewusstlos + keine normale Atmung",
+ko:"Hypoxischer Hirnschaden • Tod",
+dd:"Synkope • Krampfanfall • Hypoglykämie • Schlaganfall • Vergiftung",
+b:"Keine Zeit für Labor – EKG/AED-Analyse",
+nf:2,nfm:"Laut um Hilfe rufen → 112 → sofort Herzdruckmassage (Mitte Brustkorb, 5–6 cm tief, 100–120/min) • 30 Kompressionen : 2 Beatmungen • AED holen lassen und Anweisungen folgen • ohne Unterbrechung bis Rettungsdienst übernimmt"},
+
+{n:"Infektiöse Endokarditis",a:"Bakterielle Herzinnenhautentzündung, Endocarditis lenta",k:"herz",
+d:"Bakterielle (selten mykotische) Entzündung der Herzinnenhaut, v. a. der Herzklappen, mit Bildung von Vegetationen.",
+u:"Streptokokken (Strep. viridans, „Endocarditis lenta“ – schleichend), Staphylococcus aureus (akut, i.v.-Drogenabhängige), Enterokokken • Eintrittspforten: Zahnbehandlung, Eingriffe, i.v.-Drogen, Katheter • Risiko: Herzklappenfehler, künstliche Klappen, frühere Endokarditis, angeborene Herzfehler",
+s:"Fieber, Schüttelfrost, Nachtschweiß • Müdigkeit, Gewichtsverlust • neues/verändertes Herzgeräusch • Petechien, Splitterblutungen unter den Nägeln • Osler-Knötchen (schmerzhaft, Finger/Zehen), Janeway-Läsionen (schmerzlos, Handflächen) • Roth-Flecken (Netzhaut) • Splenomegalie • Trommelschlegelfinger (chronisch)",
+l:"Fieber unklarer Ursache + neues Herzgeräusch",
+ko:"Klappenzerstörung → akute Herzinsuffizienz • septische Embolien: Schlaganfall, Milz-/Niereninfarkt, Hirnabszess • Glomerulonephritis • Sepsis • Tod",
+dd:"Rheumatisches Fieber • Lupus erythematodes (Libman-Sacks) • Sepsis anderer Ursache • Tumorfieber, Lymphom • Tuberkulose",
+b:"Blutkulturen (mehrfach!) • BSG/CRP stark ↑, Leukozytose • Anämie • Hämaturie/Proteinurie • Echokardiografie (TEE): Vegetationen",
+nf:1,nfm:"Akute Form mit Sepsiszeichen, Herzinsuffizienz oder Embolie → 112. Grundsätzlich sofort zum Arzt (Antibiotika i.v.)."},
+
+{n:"Myokarditis",a:"Herzmuskelentzündung",k:"herz",
+d:"Entzündung des Herzmuskels, meist viral, oft nach Atemwegs- oder Magen-Darm-Infekt.",
+u:"Viren (Coxsackie B, Adeno-, Parvo B19, Influenza, SARS-CoV-2, HHV-6) • Bakterien (Diphtherie, Borrelien, Streptokokken) • Autoimmun (Lupus, Sarkoidose) • toxisch (Alkohol, Medikamente), selten nach Impfung • Risikofaktor: Sport während eines Infekts",
+s:"Oft symptomarm • Müdigkeit, Leistungsknick • Herzstolpern, Tachykardie • Atemnot • Brustschmerz (bei Perimyokarditis) • Zeichen der Herzinsuffizienz",
+l:"Leistungsknick und Herzrhythmusstörungen nach einem Infekt",
+ko:"Rhythmusstörungen, plötzlicher Herztod (v. a. bei Sport!) • dilatative Kardiomyopathie • Herzinsuffizienz",
+dd:"Herzinfarkt • Perikarditis • Kardiomyopathie • Hyperthyreose • Post-/Long-Covid",
+b:"Troponin, CK ↑ • BSG/CRP ↑ • BNP ↑ • Virusserologie • EKG-Veränderungen • Echo, Kardio-MRT",
+nf:1,nfm:"Bei Brustschmerz, Atemnot, Synkope → 112. Strikte körperliche Schonung, kein Sport."},
+
+{n:"Perikarditis",a:"Herzbeutelentzündung, Perikarderguss",k:"herz",
+d:"Entzündung des Herzbeutels (Perikard): trocken (fibrinös) oder feucht (mit Erguss).",
+u:"Idiopathisch/viral (häufig: Coxsackie, Echo) • bakteriell, Tuberkulose • nach Herzinfarkt (Dressler) oder Herz-OP • Urämie (Niereninsuffizienz) • Autoimmun (Lupus, RA, rheumatisches Fieber) • Tumor/Bestrahlung • Hypothyreose",
+s:"Trockene P.: stechender Brustschmerz, atem- und lageabhängig (besser im Sitzen mit Vorbeugen, schlimmer im Liegen/beim Einatmen), Perikardreiben • Feuchte P.: Schmerz nimmt ab, leise Herztöne, Atemnot, Halsvenenstauung • Fieber",
+l:"Atem- und lageabhängiger Brustschmerz, besser beim Vorbeugen",
+ko:"Perikardtamponade (Notfall: RR ↓, Halsvenenstauung, leise Herztöne = Beck-Trias, Pulsus paradoxus) • Pericarditis constrictiva („Panzerherz“)",
+dd:"Herzinfarkt • Lungenembolie • Pleuritis • Pneumothorax • Aortendissektion",
+b:"BSG/CRP ↑, Leukozytose • Troponin (Perimyokarditis) • Kreatinin (Urämie) • EKG: ST-Hebung in vielen Ableitungen • Echo (Erguss)",
+nf:1,nfm:"Zeichen einer Perikardtamponade (Atemnot, RR-Abfall, gestaute Halsvenen) → 112, Oberkörper hoch."},
+
+{n:"Aortenklappenstenose",a:"Aortenstenose",k:"herz",
+d:"Verengung der Aortenklappe mit Druckbelastung des linken Ventrikels. Häufigster Herzklappenfehler im Alter.",
+u:"Degenerativ-kalzifizierend (Alter > 65) • angeborene bikuspide Klappe • rheumatisches Fieber",
+s:"Lange symptomlos • Trias: Belastungsdyspnoe, Angina pectoris, Synkopen (Schwindel bei Belastung) • rasche Ermüdbarkeit • lautes systolisches Austreibungsgeräusch (2. ICR rechts) mit Fortleitung in die Karotiden • Pulsus parvus et tardus",
+l:"Belastungsabhängige Synkope, Angina pectoris und Dyspnoe bei älteren Menschen",
+ko:"Linksherzinsuffizienz, Lungenödem • plötzlicher Herztod • Rhythmusstörungen • Endokarditis",
+dd:"KHK • hypertrophe Kardiomyopathie • Mitralinsuffizienz • andere Synkopenursachen",
+b:"BNP ↑ • Echokardiografie (Klappenöffnungsfläche, Gradient)",
+nf:1,nfm:"Synkope, Ruheangina oder Lungenödem → 112."},
+
+{n:"Mitralklappeninsuffizienz / Mitralstenose",a:"Mitralklappenfehler",k:"herz",
+d:"Schlussunfähigkeit (Insuffizienz) oder Verengung (Stenose) der Mitralklappe mit Rückstau in Vorhof und Lunge.",
+u:"Insuffizienz: degenerativ, Mitralklappenprolaps, Herzinfarkt (Papillarmuskel), Endokarditis, dilatierter linker Ventrikel • Stenose: fast immer Folge des rheumatischen Fiebers",
+s:"Belastungsdyspnoe, nächtlicher Husten • Herzstolpern (Vorhofflimmern) • Leistungsminderung • Stenose: Facies mitralis (gerötete Wangen, livide Lippen), Hämoptysen • Insuffizienz: holosystolisches Geräusch an der Herzspitze",
+l:"Belastungsdyspnoe + Vorhofflimmern",
+ko:"Vorhofflimmern mit Thromboembolien (Schlaganfall) • Lungenödem • pulmonale Hypertonie, Rechtsherzinsuffizienz • Endokarditis",
+dd:"Andere Herzklappenfehler • Herzinsuffizienz anderer Ursache • COPD",
+b:"BNP ↑ • EKG (P mitrale, Vorhofflimmern) • Echokardiografie",
+nf:1,nfm:"Akutes Lungenödem oder Schlaganfallzeichen → 112."},
+
+{n:"Rheumatisches Fieber",a:"Streptokokkenrheumatismus",k:"herz",
+d:"Autoimmune Zweiterkrankung ca. 1–3 Wochen nach einer Infektion mit β-hämolysierenden Streptokokken der Gruppe A (Angina, Scharlach) durch Kreuzreaktion der Antikörper.",
+u:"Streptokokken-A-Infekt (Tonsillitis, Scharlach) • Antikörper reagieren mit körpereigenem Gewebe (Herz, Gelenke, Haut, ZNS) • Kinder 5–15 Jahre",
+s:"Jones-Kriterien – Hauptkriterien: Karditis (Endo-, Myo-, Perikarditis), springende Polyarthritis der großen Gelenke, Chorea minor (Sydenham), Erythema anulare (marginatum), subkutane Rheumaknötchen • Nebenkriterien: Fieber, Arthralgien, BSG/CRP ↑, verlängerte PQ-Zeit",
+l:"Wandernde Gelenkentzündung großer Gelenke 2–3 Wochen nach Angina",
+ko:"Rheumatische Herzklappenfehler (v. a. Mitralstenose) • Herzinsuffizienz • Rezidive",
+dd:"Reaktive Arthritis • juvenile idiopathische Arthritis • Lupus • Borreliose • Endokarditis",
+b:"Antistreptolysin-O-Titer (ASL) ↑, Anti-DNase B ↑ • BSG/CRP ↑, Leukozytose • Rachenabstrich (Arzt)",
+nf:0,bv:"Die auslösende Streptococcus-pyogenes-Infektion (Scharlach/Angina) fällt unter § 34 IfSG → § 24 IfSG Behandlungsverbot für den akuten Infekt."},
+
+{n:"Kardiomyopathie",a:"Herzmuskelerkrankung (dilatativ, hypertroph, restriktiv)",k:"herz",
+d:"Erkrankung des Herzmuskels mit mechanischer und/oder elektrischer Funktionsstörung. Formen: dilatativ (DCM, Erweiterung), hypertroph (HCM, Verdickung), restriktiv.",
+u:"DCM: genetisch, nach Myokarditis, Alkohol, Chemotherapie, Schwangerschaft (peripartal) • HCM: meist genetisch (autosomal-dominant) • restriktiv: Amyloidose, Sarkoidose, Hämochromatose",
+s:"Zeichen der Herzinsuffizienz (Dyspnoe, Ödeme, Müdigkeit) • Rhythmusstörungen, Palpitationen • Angina pectoris • Synkopen (v. a. HCM bei Belastung)",
+l:"Herzinsuffizienz ohne KHK; Belastungssynkope beim jungen Sportler (HCM)",
+ko:"Plötzlicher Herztod (HCM häufigste Ursache bei jungen Sportlern) • Herzinsuffizienz • Thromboembolien",
+dd:"KHK • Herzklappenfehler • hypertensive Herzkrankheit • Myokarditis",
+b:"BNP ↑ • Troponin • Ferritin/Transferrinsättigung (Hämochromatose) • Echo, Kardio-MRT, genetische Diagnostik",
+nf:1,nfm:"Synkope, Brustschmerz, Atemnot → 112."},
+
+{n:"Schock",a:"Kreislaufschock (hypovolämisch, kardiogen, septisch, anaphylaktisch, neurogen)",k:"herz",
+d:"Akutes Kreislaufversagen mit Missverhältnis zwischen Sauerstoffangebot und -bedarf der Gewebe → Mikrozirkulationsstörung und Organversagen.",
+u:"Hypovolämisch: Blutung, Verbrennung, Durchfall/Erbrechen, Exsikkose • Kardiogen: Herzinfarkt, Rhythmusstörung, Lungenembolie, Tamponade • Distributiv: Sepsis, Anaphylaxie, neurogen (Querschnitt) • Obstruktiv: Spannungspneumothorax, Lungenembolie",
+s:"Puls schnell und schwach (Tachykardie) • Blutdruck ↓ (systolisch < 90 mmHg) • Schockindex (Puls/RR syst.) > 1 • blasse, kalte, schweißige Haut (septisch anfangs warm, gerötet) • verlängerte Rekapillarisierung (> 2 Sek.) • Unruhe, Angst, später Bewusstseinstrübung • Durst • Oligurie • schnelle flache Atmung",
+l:"Puls ↑ + RR ↓ (Schockindex > 1), kaltschweißige Blässe",
+ko:"Multiorganversagen (Schockniere, Schocklunge/ARDS, DIC) • Tod",
+dd:"Vasovagale Synkope • orthostatische Hypotonie • Hypoglykämie",
+b:"Laktat ↑ • Hb (Blutung) • Blutgase (metabolische Azidose) • Kreatinin • Gerinnung (DIC)",
+nf:2,nfm:"112 • Schocklage: Beine ca. 30° hoch (NICHT bei kardiogenem Schock, Lungenödem, Kopf-/Thoraxverletzung) • Blutung stillen • Wärmeerhalt, beruhigen, nichts zu trinken • Vitalzeichen alle 1–2 Min. • Anaphylaxie: Allergenzufuhr stoppen"}
+);
+
+D.push(
+{n:"Arteriosklerose",a:"Atherosklerose, Arterienverkalkung",k:"gefaess",
+d:"Chronisch fortschreitende Erkrankung der Arterienwand mit Ablagerung von Lipiden, Kalk und Bindegewebe (Plaques) → Verhärtung, Elastizitätsverlust und Einengung der Arterien.",
+u:"Endothelschaden → Einlagerung von LDL-Cholesterin → Schaumzellen, Entzündung, Plaquebildung • Risikofaktoren: Rauchen, Hypertonie, Diabetes, Hypercholesterinämie (LDL ↑, HDL ↓), Adipositas, Bewegungsmangel, Alter, männliches Geschlecht, Familie, Hyperurikämie",
+s:"Lange symptomlos • Beschwerden erst durch Organmanifestation: Herz (KHK), Gehirn (TIA, Schlaganfall), Beine (pAVK), Niere, Darm (Angina abdominalis), Aorta (Aneurysma)",
+l:"Symptome erst durch Durchblutungsstörung des betroffenen Organs",
+ko:"Herzinfarkt • Schlaganfall • pAVK, Gangrän • Aortenaneurysma • Nierenarterienstenose • Mesenterialinfarkt • erektile Dysfunktion",
+dd:"Vaskulitiden • Mönckeberg-Mediasklerose (Diabetes, Niereninsuffizienz)",
+b:"Gesamt-, LDL-, HDL-Cholesterin, Triglyzeride, Lp(a) • BZ, HbA1c • Harnsäure • Kreatinin • Doppler-/Duplexsonografie, Knöchel-Arm-Index",
+nf:0},
+
+{n:"Periphere arterielle Verschlusskrankheit (pAVK)",a:"Schaufensterkrankheit, Claudicatio intermittens, Raucherbein",k:"gefaess",
+d:"Durchblutungsstörung der Extremitäten (meist Beine) durch Arteriosklerose. Stadien nach Fontaine I–IV.",
+u:"Arteriosklerose (> 90 %) • Hauptrisikofaktoren: Rauchen und Diabetes • weitere: Hypertonie, Hyperlipidämie, Alter",
+s:"Fontaine I: symptomlos • II: belastungsabhängiger Wadenschmerz (Claudicatio intermittens), Stehenbleiben bessert (IIa > 200 m, IIb < 200 m Gehstrecke) • III: Ruheschmerz, v. a. nachts im Liegen, besser beim Herabhängen des Beins • IV: Nekrose, Gangrän, Ulkus • kalte, blasse Haut, abgeschwächte/fehlende Fußpulse, Haarverlust, Nagelwachstumsstörung, schlechte Wundheilung • Ratschow-Lagerungsprobe positiv",
+l:"Belastungsabhängiger Wadenschmerz, der nach Stehenbleiben verschwindet",
+ko:"Kritische Ischämie, Gangrän, Amputation • akuter Gefäßverschluss • hohes Risiko für Herzinfarkt und Schlaganfall",
+dd:"Spinalkanalstenose (Claudicatio spinalis – Besserung erst durch Hinsetzen/Vorbeugen) • Polyneuropathie • Arthrose • chronisch-venöse Insuffizienz • Thrombangiitis obliterans (junge Raucher)",
+b:"Lipide, BZ/HbA1c, Kreatinin • Knöchel-Arm-Index (ABI) < 0,9 • Duplexsonografie, Angiografie",
+nf:1,nfm:"Plötzlich kaltes, blasses, schmerzhaftes Bein = akuter Verschluss → 112."},
+
+{n:"Akuter arterieller Verschluss",a:"Akute Extremitätenischämie, arterielle Embolie",k:"gefaess",
+d:"Plötzlicher Verschluss einer Extremitätenarterie durch Embolie oder Thrombose → akute Ischämie. Notfall: Gewebe stirbt nach ca. 6 Stunden ab.",
+u:"Embolie (ca. 70 %): meist aus dem Herzen (Vorhofflimmern, Herzinfarkt, Klappenfehler, Endokarditis), Aneurysma • Arterielle Thrombose auf vorbestehender pAVK • Trauma, Dissektion",
+s:"6 P nach Pratt: Pain (plötzlicher peitschenhiebartiger Schmerz), Paleness (Blässe), Pulselessness (Pulslosigkeit), Paresthesia (Gefühlsstörung), Paralysis (Lähmung), Prostration (Schock) • Extremität kalt, marmoriert",
+l:"Plötzlicher Schmerz, kalte, blasse, pulslose Extremität (6 P)",
+ko:"Gangrän, Amputation • Kompartmentsyndrom und Reperfusionsschaden nach Wiedereröffnung • Nierenversagen (Myoglobin), Hyperkaliämie • Tod",
+dd:"Tiefe Venenthrombose (warm, geschwollen, blau-rot) • Phlegmasia coerulea dolens • Aortendissektion • Nervenkompression",
+b:"CK ↑, Myoglobin, Laktat, Kalium ↑ • D-Dimere • Gerinnung • EKG (Vorhofflimmern) • Duplex, Angiografie",
+nf:2,nfm:"112 – Gefäßchirurgie innerhalb von 6 Std. • Extremität TIEF lagern, Watteverband zum Wärmeschutz (keine Wärmflasche!) • nicht hochlagern, keine Kompression, keine i.m.-Spritzen • Schocklagerung meiden, Vitalzeichen überwachen"},
+
+{n:"Bauchaortenaneurysma",a:"Abdominelles Aortenaneurysma (AAA)",k:"gefaess",
+d:"Sackförmige oder spindelförmige Erweiterung der Bauchaorta auf > 3 cm (meist unterhalb der Nierenarterien).",
+u:"Arteriosklerose (häufigste Ursache) • Rauchen, Hypertonie, Alter, Männer > 65 J. • genetisch (Marfan-, Ehlers-Danlos-Syndrom) • Infektion (Syphilis), Trauma",
+s:"Meist symptomlos (Zufallsbefund) • pulsierender Tumor im Bauch tastbar • Rücken-/Flankenschmerzen • Ruptur: plötzlicher heftiger Bauch-/Rückenschmerz mit Ausstrahlung in Leiste/Beine, Schock",
+l:"Pulsierende Resistenz im Bauch; bei Ruptur Vernichtungsschmerz im Rücken + Schock",
+ko:"Ruptur (Letalität > 80 %) • Thrombose, periphere Embolien • Kompression von Nachbarorganen",
+dd:"Nierenkolik • Lumbago/Bandscheibenvorfall • Pankreatitis • Mesenterialinfarkt • Herzinfarkt • Divertikulitis",
+b:"Ultraschall (Screening Männer ab 65), CT • Hb ↓ bei Ruptur",
+nf:1,nfm:"Rupturverdacht (Bauch-/Rückenschmerz + Schock) → 112 • flach lagern, Beine NICHT hoch, Blutdruck nicht anheben, beruhigen, nichts essen/trinken."},
+
+{n:"Aortendissektion",a:"Aneurysma dissecans",k:"gefaess",
+d:"Einriss der inneren Aortenwandschicht (Intima) mit Einblutung zwischen die Wandschichten → Ausbildung eines falschen Lumens. Typ A (Aorta ascendens, OP-Notfall) und Typ B (Aorta descendens).",
+u:"Arterielle Hypertonie (wichtigster Faktor) • Arteriosklerose • Marfan-, Ehlers-Danlos-Syndrom • bikuspide Aortenklappe • Schwangerschaft • Kokain • Trauma",
+s:"Plötzlicher, reißender/schneidender Vernichtungsschmerz in Brust oder Rücken (zwischen den Schulterblättern), ggf. wandernd • Blutdruckdifferenz zwischen beiden Armen (> 20 mmHg) • Pulsdefizit • Schock • neurologische Ausfälle (Schlaganfall, Paraplegie) • Bauchschmerz (Mesenterialischämie), Nierenversagen",
+l:"Plötzlicher reißender Brust-/Rückenschmerz mit Blutdruckdifferenz zwischen den Armen",
+ko:"Ruptur, Perikardtamponade • Herzinfarkt (Koronarabgang) • Aortenklappeninsuffizienz • Schlaganfall • Organischämien • Tod (unbehandelt Typ A: 1 % Letalität pro Stunde)",
+dd:"Herzinfarkt • Lungenembolie • Spannungspneumothorax • Perikarditis • akutes Abdomen • Nierenkolik",
+b:"D-Dimere ↑ • Troponin (DD Infarkt) • Hb • Kreatinin • Laktat • CT-Angiografie, TEE",
+nf:2,nfm:"112 • Oberkörper leicht hoch, absolute Ruhe, beruhigen • Blutdruck an beiden Armen messen • keine Kreislaufanregung • Vitalzeichen überwachen"},
+
+{n:"Varikosis",a:"Krampfadern, Varizen",k:"gefaess",
+d:"Erweiterte, geschlängelte oberflächliche Venen, meist an den Beinen, durch Venenwand- und Venenklappenschwäche.",
+u:"Primär (~95 %): angeborene Bindegewebsschwäche, Familie, Frauen, Schwangerschaften, stehende Tätigkeit, Übergewicht, Alter • Sekundär: nach tiefer Beinvenenthrombose (postthrombotisches Syndrom) • Formen: Besenreiser, retikuläre, Stamm-, Seitenast-, Perforansvarizen",
+s:"Sichtbare geschlängelte Venen • Schwere-, Spannungsgefühl, „müde Beine“, besser beim Hochlegen/Gehen • Knöchelödeme abends • nächtliche Wadenkrämpfe • Juckreiz",
+l:"Schwere, müde Beine mit sichtbaren Krampfadern, abends schlimmer",
+ko:"Thrombophlebitis • Varizenblutung • tiefe Beinvenenthrombose • chronisch-venöse Insuffizienz: Ödeme, Hyperpigmentierung, Stauungsekzem, Atrophie blanche, Ulcus cruris venosum (Innenknöchel)",
+dd:"Lymphödem • kardiale/renale Ödeme • tiefe Beinvenenthrombose • Lipödem",
+b:"Duplexsonografie • Trendelenburg-, Perthes-Test • Labor meist unauffällig",
+nf:0},
+
+{n:"Thrombophlebitis",a:"Oberflächliche Venenentzündung, Varikophlebitis",k:"gefaess",
+d:"Entzündung einer oberflächlichen Vene mit Thrombose.",
+u:"Varizen (Varikophlebitis) • Venenverweilkanülen, Infusionen • Verletzungen • Gerinnungsstörung • Thrombophlebitis migrans (wandernd): Hinweis auf Tumor (Pankreas!) oder Thrombangiitis obliterans",
+s:"Schmerzhafter, geröteter, überwärmter, derber, tastbarer Venenstrang • lokale Schwellung • kein generalisiertes Beinödem • selten Fieber",
+l:"Roter, schmerzhafter, tastbarer Venenstrang",
+ko:"Übergreifen auf tiefe Venen (Mündung der V. saphena magna) → TVT, Lungenembolie • Abszess, Sepsis",
+dd:"Tiefe Beinvenenthrombose • Erysipel • Lymphangitis • Hämatom",
+b:"Duplexsonografie (Ausschluss TVT) • D-Dimere • bei rezidivierender, wandernder Form Tumorsuche",
+nf:0},
+
+{n:"Tiefe Beinvenenthrombose (TVT)",a:"Phlebothrombose",k:"gefaess",
+d:"Blutgerinnsel in einer tiefen Bein- oder Beckenvene mit teilweisem oder vollständigem Verschluss. Größte Gefahr: Lungenembolie.",
+u:"Virchow-Trias: Strömungsverlangsamung (Immobilisation, Bettlägerigkeit, Gips, lange Reisen, Herzinsuffizienz, Varizen), Gefäßwandschaden (OP, Trauma), erhöhte Gerinnbarkeit (Pille + Rauchen, Schwangerschaft/Wochenbett, Tumor, Faktor-V-Leiden, Exsikkose, Polyglobulie) • Alter, Adipositas",
+s:"Oft symptomarm! • einseitige Beinschwellung, Umfangsdifferenz • Schwere-/Spannungsgefühl, Schmerz • Überwärmung, livide (bläuliche) Verfärbung • glänzende Haut, sichtbare Kollateralvenen (Pratt-Warnvenen) • Druckschmerz an Wade/Fußsohle: Homans-Zeichen (Wadenschmerz bei Dorsalflexion), Payr-Zeichen (Fußsohle), Meyer-Zeichen (Wadenkompression) • Beschwerden besser beim Hochlagern",
+l:"Einseitig geschwollenes, überwärmtes, bläuliches, schmerzhaftes Bein",
+ko:"Lungenembolie (!) • Phlegmasia coerulea dolens • postthrombotisches Syndrom, Ulcus cruris • Rezidive",
+dd:"Muskelfaserriss, Hämatom • rupturierte Baker-Zyste • Erysipel • Lymphödem • Thrombophlebitis • Kompartmentsyndrom",
+b:"D-Dimere ↑ (negativ schließt TVT weitgehend aus) • Wells-Score • Kompressionssonografie • Gerinnungsdiagnostik (Thrombophilie)",
+nf:1,nfm:"Sofort zum Arzt/Klinik (Antikoagulation). Bein nicht massieren. Bei Atemnot/Brustschmerz (Lungenembolie) → 112."},
+
+{n:"Phlegmasia coerulea dolens",a:"Massive Venenthrombose mit Ischämie",k:"gefaess",
+d:"Maximalform der TVT: Thrombose praktisch aller Venen einer Extremität → Druckanstieg im Gewebe → Abdrücken der Arterien → arterielle Minderdurchblutung.",
+u:"Ausgedehnte Bein-/Beckenvenenthrombose (Risikofaktoren wie TVT, oft Tumorpatienten)",
+s:"Massiv geschwollenes, dunkelblau-violettes, sehr schmerzhaftes Bein • kalt, Pulse schwach/fehlend • Gefühlsstörung, Lähmung • Schock durch Flüssigkeitsverlust ins Gewebe",
+l:"Extrem geschwollenes, blau-schwarzes, kaltes, schmerzhaftes Bein + Schock",
+ko:"Gangrän, Amputation • Lungenembolie • hypovolämischer Schock • Tod",
+dd:"Akuter arterieller Verschluss • Kompartmentsyndrom",
+b:"D-Dimere ↑, CK ↑, Laktat • Duplex",
+nf:2,nfm:"112 • Bein leicht hochlagern • Schockbekämpfung, Vitalzeichen • keine Kompression"},
+
+{n:"Raynaud-Syndrom",a:"Morbus Raynaud, Weißfingerkrankheit",k:"gefaess",
+d:"Anfallsartige Gefäßkrämpfe (Vasospasmen) der Finger-/Zehenarterien. Primär (ohne Grunderkrankung, junge Frauen) oder sekundär (Begleitsymptom).",
+u:"Primär: unbekannt, Kälte, Stress • Sekundär: Kollagenosen (Sklerodermie, Lupus), rheumatoide Arthritis, Vibrationstrauma (Presslufthammer), Medikamente (Betablocker, Ergotamine), Kryoglobulinämie, Arteriosklerose, Rauchen",
+s:"Trikolore-Phänomen: weiß (Ischämie) → blau (Zyanose) → rot (reaktive Hyperämie) • Kälte, Taubheit, Kribbeln, Schmerz • meist symmetrisch, Daumen oft ausgespart • Auslöser: Kälte, Stress",
+l:"Anfallsweise weiß-blau-rote Verfärbung der Finger bei Kälte",
+ko:"Sekundäre Form: Fingerkuppennekrosen, Rattenbissnekrosen, Ulzera",
+dd:"Akrozyanose • pAVK • Thrombangiitis obliterans • Karpaltunnelsyndrom",
+b:"ANA, Anti-Scl-70, Anti-Zentromer (Sklerodermie) • Rheumafaktor • BSG • Kapillarmikroskopie",
+nf:0},
+
+{n:"Riesenzellarteriitis",a:"Arteriitis temporalis, Morbus Horton",k:"gefaess",
+d:"Granulomatöse Vaskulitis großer und mittelgroßer Arterien, v. a. der Schläfenarterie, bei Menschen > 50 Jahre. Häufig mit Polymyalgia rheumatica kombiniert.",
+u:"Autoimmun (T-Zell-vermittelt) • Frauen häufiger • genetische Faktoren",
+s:"Neuer, heftiger Schläfenkopfschmerz • verdickte, druckschmerzhafte, pulslose Schläfenarterie • Kauschmerz (Claudicatio masticatoria) • Sehstörungen (Amaurosis fugax, Doppelbilder) • Fieber, Gewichtsverlust, Nachtschweiß, Müdigkeit • Schulter-/Beckengürtelschmerz (Polymyalgie)",
+l:"Neuer Schläfenkopfschmerz bei > 50-Jährigen mit stark erhöhter BSG",
+ko:"Plötzliche irreversible Erblindung (A. ophthalmica) – Notfall! • Schlaganfall • Aortenaneurysma",
+dd:"Migräne, Spannungskopfschmerz • Trigeminusneuralgie • Glaukom • Polymyalgia rheumatica allein",
+b:"BSG massiv ↑ (Sturzsenkung > 50 mm/h) • CRP ↑ • Anämie, Thrombozytose • Biopsie der Temporalarterie, Duplexsonografie (Halo-Zeichen)",
+nf:1,nfm:"Bei Sehstörungen sofort Klinik (hochdosiertes Kortison noch am selben Tag), sonst Erblindungsgefahr."},
+
+{n:"Lymphödem",a:"Lymphstau",k:"gefaess",
+d:"Ansammlung eiweißreicher Flüssigkeit im Zwischengewebe durch gestörten Lymphabfluss.",
+u:"Primär: angeborene Fehlbildung der Lymphgefäße (meist Frauen, Beine) • Sekundär (häufiger): Lymphknotenentfernung/Bestrahlung (z. B. Brustkrebs → Arm), Tumoren, Infektionen (Erysipel, Filariose), Trauma",
+s:"Schmerzlose, teigige, später derbe Schwellung • Zehen/Finger mitbetroffen (Kastenzehen) • Stemmer-Zeichen positiv (Hautfalte über 2. Zehe nicht abhebbar) • Schweregefühl • Hochlagern bessert anfangs, später kaum",
+l:"Schmerzlose Schwellung inkl. Zehen, Stemmer-Zeichen positiv",
+ko:"Erysipel (rezidivierend) • Fibrosierung, Elephantiasis • Lymphangiosarkom (Stewart-Treves, selten)",
+dd:"Lipödem (symmetrisch, Füße frei, druckschmerzhaft) • venöses Ödem • kardiales/renales Ödem • Myxödem • TVT",
+b:"Labor zum Ausschluss anderer Ödemursachen (Kreatinin, Albumin, TSH, BNP) • Lymphszintigrafie",
+nf:0},
+
+{n:"Vaskulitiden (Übersicht)",a:"Gefäßentzündungen, Panarteriitis nodosa, Granulomatose mit Polyangiitis, Purpura Schoenlein-Henoch, Kawasaki",k:"gefaess",
+d:"Gruppe entzündlicher, meist autoimmuner Erkrankungen der Blutgefäße, eingeteilt nach Gefäßgröße (groß: Riesenzellarteriitis, Takayasu; mittel: Panarteriitis nodosa, Kawasaki; klein: Granulomatose mit Polyangiitis, Purpura Schoenlein-Henoch).",
+u:"Autoimmun (Immunkomplexe, ANCA) • Infektionen (Hepatitis B bei Panarteriitis nodosa) • Medikamente",
+s:"Allgemeinsymptome: Fieber, Gewichtsverlust, Abgeschlagenheit • tastbare Purpura (Haut) • Gelenk-/Muskelschmerzen • Nierenbeteiligung (Hämaturie) • Lungenbeteiligung (Hämoptysen) • Polyneuropathie • HNO (blutiger Schnupfen, Sattelnase bei Granulomatose mit Polyangiitis) • Kawasaki (Kinder): hohes Fieber > 5 Tage, Erdbeerzunge, Lacklippen, Konjunktivitis, Hautschuppung an Händen/Füßen",
+l:"Fieber, tastbare Purpura, Gelenkschmerzen und Organbeteiligung",
+ko:"Niereninsuffizienz • Lungenblutung • Koronaraneurysmen (Kawasaki) • Schlaganfall",
+dd:"Sepsis, Endokarditis • Lupus • Tumorerkrankung • Scharlach (DD Kawasaki)",
+b:"BSG/CRP ↑ • ANCA (c-ANCA: Granulomatose mit Polyangiitis, p-ANCA) • Kreatinin, Urinsediment • Hepatitis-Serologie • Biopsie",
+nf:1,nfm:"Bei Lungenblutung, rasch steigendem Kreatinin oder Kawasaki-Verdacht → Klinik."}
+);
+
+D.push(
+{n:"Asthma bronchiale",a:"Bronchialasthma, Status asthmaticus",k:"lunge",
+d:"Chronisch-entzündliche Atemwegserkrankung mit bronchialer Überempfindlichkeit und anfallsweiser, (weitgehend) reversibler Atemwegsverengung.",
+u:"Allergisch/extrinsisch (Kinder, Atopie: Pollen, Hausstaubmilben, Tierhaare) • nicht allergisch/intrinsisch (Infekte, Anstrengung, Kälte, ASS/NSAR, Reizstoffe, Reflux) • Pathophysiologie: Bronchospasmus + Schleimhautödem + zäher Schleim (Dyskrinie)",
+s:"Anfallsweise Atemnot, v. a. nachts/frühmorgens • exspiratorisches Giemen und Pfeifen, verlängerte Ausatmung • Husten, zäher glasiger Auswurf • Engegefühl in der Brust • Einsatz der Atemhilfsmuskulatur (Kutschersitz) • Tachykardie • Status asthmaticus: Sprechen kaum möglich, Zyanose, „stille Lunge“ (kaum Atemgeräusch), Erschöpfung",
+l:"Anfallsweise Atemnot mit exspiratorischem Giemen",
+ko:"Status asthmaticus (lebensbedrohlich) • respiratorische Insuffizienz • Pneumothorax • Lungenemphysem, Cor pulmonale",
+dd:"COPD • Asthma cardiale (Lungenödem) • Lungenembolie • Fremdkörperaspiration • Hyperventilation • Stimmbandfunktionsstörung • Pseudokrupp/Epiglottitis (Kinder)",
+b:"Eosinophile ↑, Gesamt-IgE ↑ (allergisch) • Lungenfunktion: FEV1 ↓, reversibel nach Bronchodilatator • Peak-Flow-Variabilität • Allergietest • Blutgase im Anfall",
+nf:1,nfm:"Schwerer Anfall/Status asthmaticus → 112 • aufrecht sitzen (Kutschersitz), Lippenbremse, beruhigen • eigenes Notfallspray (Bedarfsspray) anwenden lassen • Fenster öffnen, enge Kleidung lösen"},
+
+{n:"COPD",a:"Chronisch obstruktive Lungenerkrankung, chronisch obstruktive Bronchitis",k:"lunge",
+d:"Chronische, nicht vollständig reversible, meist fortschreitende Atemwegsobstruktion (chronische Bronchitis und/oder Lungenemphysem). Chronische Bronchitis (WHO): Husten und Auswurf an den meisten Tagen über mind. 3 Monate in 2 aufeinanderfolgenden Jahren.",
+u:"Rauchen (≈ 90 %) • berufliche Stäube/Dämpfe, Luftverschmutzung • α1-Antitrypsin-Mangel • häufige Atemwegsinfekte in der Kindheit • Pathophysiologie: chronische Entzündung, Schleimhypersekretion, Zilienschaden, Alveolenzerstörung",
+s:"AHA-Symptome: Auswurf, Husten (v. a. morgens), Atemnot (zuerst bei Belastung) • Giemen • Infektexazerbationen (eitriger Auswurf) • Fassthorax, Lippenbremse • Typen: „Pink Puffer“ (hager, Emphysem, starke Dyspnoe) und „Blue Bloater“ (übergewichtig, zyanotisch, Husten/Auswurf) • Spätstadium: Trommelschlegelfinger, Uhrglasnägel, Zyanose, Gewichtsverlust",
+l:"Raucherhusten mit Auswurf und zunehmender Belastungsdyspnoe",
+ko:"Akute Exazerbation • respiratorische Insuffizienz • Cor pulmonale (Rechtsherzinsuffizienz) • Lungenemphysem • Pneumonie • Pneumothorax • Polyglobulie • Lungenkarzinom",
+dd:"Asthma bronchiale • Herzinsuffizienz • Bronchiektasen • Lungenkarzinom • Tuberkulose • Lungenfibrose",
+b:"Lungenfunktion: FEV1/FVC < 0,7 nach Bronchodilatator • Blutgase: pO2 ↓, später pCO2 ↑ • Polyglobulie (Hb/Hkt ↑) • α1-Antitrypsin • CRP bei Exazerbation",
+nf:1,nfm:"Schwere Exazerbation (Ruhedyspnoe, Zyanose, Verwirrtheit) → 112 • aufrecht sitzen, Lippenbremse."},
+
+{n:"Lungenemphysem",a:"Lungenüberblähung",k:"lunge",
+d:"Irreversible Erweiterung und Zerstörung der Lufträume distal der Bronchiolen (Alveolarwände) mit Verlust der Gasaustauschfläche und der elastischen Rückstellkraft.",
+u:"Rauchen (zentrilobulär) • α1-Antitrypsin-Mangel (panlobulär, junge Patienten, Unterlappen) • Altersemphysem • Narbenemphysem",
+s:"Zunehmende Atemnot • Fassthorax, horizontal verlaufende Rippen • hypersonorer Klopfschall (Schachtelton), tiefstehende, wenig verschiebliche Zwerchfelle • abgeschwächtes Atemgeräusch • Lippenbremse, Kachexie („Pink Puffer“)",
+l:"Atemnot, Fassthorax, Schachtelton",
+ko:"Respiratorische Insuffizienz • Cor pulmonale • Spontanpneumothorax (Emphysemblasen)",
+dd:"COPD (Überlappung) • Asthma • Herzinsuffizienz",
+b:"α1-Antitrypsin ↓ (bei Mangel) • Blutgase • Lungenfunktion (Residualvolumen ↑, Diffusionskapazität ↓) • Röntgen/CT",
+nf:0},
+
+{n:"Pneumonie",a:"Lungenentzündung",k:"lunge",
+d:"Akute oder chronische Entzündung des Lungenparenchyms (Alveolen und/oder Interstitium), meist infektiös.",
+u:"Ambulant erworben: Pneumokokken (häufigster Erreger), Haemophilus influenzae, Mykoplasmen, Chlamydien, Legionellen, Viren (Influenza, RSV, SARS-CoV-2) • nosokomial: Staphylokokken, Pseudomonas, Klebsiellen • Aspiration • Risikofaktoren: Alter, Immunschwäche, COPD, Bettlägerigkeit, Schluckstörung, Alkohol",
+s:"Typisch (Lobärpneumonie, bakteriell): plötzlicher Beginn, hohes Fieber, Schüttelfrost, Husten mit eitrigem/rostbraunem Auswurf, atemabhängige Thoraxschmerzen (Pleuritis), Tachypnoe, Nasenflügeln, feinblasige Rasselgeräusche, Bronchialatmen, verstärkter Stimmfremitus, Klopfschalldämpfung • Atypisch (Mykoplasmen, Viren): schleichend, mäßiges Fieber, trockener Reizhusten, Kopf-/Gliederschmerzen, geringer Auskultationsbefund • Ältere: oft nur Verwirrtheit, Schwäche, kaum Fieber",
+l:"Fieber, Husten mit Auswurf, Atemnot, atemabhängiger Thoraxschmerz",
+ko:"Sepsis • respiratorische Insuffizienz • Pleuraerguss, Pleuraempyem • Lungenabszess • Herz-Kreislauf-Versagen • Meningitis",
+dd:"Bronchitis • Lungenembolie mit Infarktpneumonie • Lungenödem • Tuberkulose • Bronchialkarzinom (Retentionspneumonie) • Lungeninfarkt",
+b:"Leukozytose mit Linksverschiebung (bakteriell), CRP/BSG ↑, PCT ↑ • Blutgase • Blutkultur, Sputum • Legionellen-/Pneumokokken-Antigen im Urin • Röntgen-Thorax • CRB-65-Score (Confusion, Atemfrequenz ≥ 30, RR < 90/60, Alter ≥ 65)",
+nf:1,nfm:"Atemnot in Ruhe, Verwirrtheit, RR-Abfall, Sepsiszeichen → 112.",
+bv:"Bei Erregern nach § 7 IfSG (z. B. Legionellen, Influenza, SARS-CoV-2, Chlamydia psittaci) bzw. Tuberkulose → § 24 IfSG Behandlungsverbot. Bakterielle Pneumonie ist ohnehin ärztlich (Antibiotika) zu behandeln."},
+
+{n:"Akute Bronchitis",a:"Erkältungsbronchitis",k:"lunge",
+d:"Akute Entzündung der Bronchialschleimhaut, meist im Rahmen eines viralen Atemwegsinfekts.",
+u:"Viren (> 90 %: Rhino-, Adeno-, RSV, Influenza, Parainfluenza, Corona) • bakterielle Superinfektion (Pneumokokken, Haemophilus) • Reizgase",
+s:"Husten, anfangs trocken, später mit Auswurf (schleimig, bei Superinfektion eitrig-gelb) • Brennen hinter dem Brustbein • leichtes Fieber, Abgeschlagenheit • Schnupfen, Halsschmerzen • ggf. Giemen",
+l:"Husten nach Erkältung, anfangs trocken, dann produktiv",
+ko:"Pneumonie • Exazerbation einer COPD/eines Asthmas • Sinusitis • chronischer Husten",
+dd:"Pneumonie • Keuchhusten (Pertussis) • Asthma • Influenza • Tuberkulose (Husten > 3 Wochen!) • Bronchialkarzinom",
+b:"Meist nicht nötig • Leukozyten/CRP bei Verdacht auf bakterielle Superinfektion • Röntgen bei Pneumonieverdacht",
+nf:0},
+
+{n:"Lungenembolie",a:"Pulmonalarterienembolie, Lungenarterienembolie",k:"lunge",
+d:"Verschluss einer oder mehrerer Lungenarterien durch eingeschwemmte Blutgerinnsel (Thromben), meist aus den tiefen Bein- oder Beckenvenen.",
+u:"Tiefe Beinvenenthrombose (> 90 %) • Risikofaktoren: Immobilisation, OP, lange Reisen, Pille + Rauchen, Schwangerschaft/Wochenbett, Tumor, Thrombophilie, Herzinsuffizienz • seltener: Fett-, Luft-, Fruchtwasserembolie",
+s:"Plötzliche Atemnot, Tachypnoe • atemabhängiger Brustschmerz • Tachykardie • Angst, Unruhe, Schweißausbruch • Husten, ggf. blutiger Auswurf (Hämoptyse) • Synkope, Schock • Zyanose • gestaute Halsvenen (Rechtsherzbelastung) • Zeichen einer TVT am Bein • Kleine Embolien oft symptomarm",
+l:"Plötzliche Atemnot + Tachykardie + atemabhängiger Brustschmerz",
+ko:"Akutes Rechtsherzversagen, kardiogener Schock • Herz-Kreislauf-Stillstand • Lungeninfarkt, Infarktpneumonie • chronische pulmonale Hypertonie (CTEPH) • Rezidive",
+dd:"Herzinfarkt • Pneumothorax • Pneumonie • Aortendissektion • Perikarditis • Asthmaanfall • Hyperventilation",
+b:"D-Dimere ↑ • Troponin, BNP ↑ (Rechtsherzbelastung) • Blutgase: pO2 ↓, pCO2 ↓ • CT-Angiografie, Echo, EKG (SI-QIII-Typ, Rechtsschenkelblock)",
+nf:2,nfm:"112 • Oberkörper hoch lagern, absolute Bettruhe, nicht laufen lassen • beruhigen, enge Kleidung öffnen • Vitalzeichen überwachen • keine i.m.-Injektionen (Lyse) • bei Kreislaufstillstand Reanimation"},
+
+{n:"Pneumothorax",a:"Spontanpneumothorax, Spannungspneumothorax",k:"lunge",
+d:"Luftansammlung im Pleuraspalt → Lunge fällt teilweise oder ganz zusammen (Kollaps). Spannungspneumothorax: Ventilmechanismus, Luft strömt ein, aber nicht aus → Verdrängung von Herz und Gefäßen.",
+u:"Primärer Spontanpneumothorax: junge, große, schlanke Männer, Raucher (geplatzte Emphysemblase) • Sekundär: COPD/Emphysem, Asthma, Mukoviszidose, Tbc, Pneumonie • Traumatisch: Rippenfraktur, Stich, Punktion, Beatmung",
+s:"Plötzlicher, einseitiger stechender Thoraxschmerz • Atemnot, Tachypnoe • trockener Reizhusten • aufgehobenes/abgeschwächtes Atemgeräusch, hypersonorer Klopfschall auf der betroffenen Seite • asymmetrische Atembewegung • Spannungspneu: zunehmende schwerste Atemnot, Zyanose, gestaute Halsvenen, Schock, Trachealverlagerung zur gesunden Seite",
+l:"Plötzlicher einseitiger Thoraxschmerz + Atemnot bei aufgehobenem Atemgeräusch",
+ko:"Spannungspneumothorax (lebensbedrohlich) • Rezidiv • Hämatopneumothorax • Mediastinalemphysem",
+dd:"Lungenembolie • Herzinfarkt • Pleuritis • Interkostalneuralgie • Rippenfraktur • Asthmaanfall",
+b:"Röntgen-Thorax (in Exspiration) • Blutgase • Sonografie",
+nf:2,nfm:"112 • Oberkörper hoch, auf die verletzte Seite lagern (gesunde Seite kann besser atmen) • beruhigen, Vitalzeichen • bei offener Thoraxverletzung: steriles Tuch locker auflegen (nicht luftdicht verkleben)"},
+
+{n:"Bronchialkarzinom",a:"Lungenkrebs, Lungenkarzinom (kleinzellig/nicht-kleinzellig)",k:"lunge",
+d:"Bösartiger Tumor des Bronchial- bzw. Lungengewebes. Häufigste Krebstodesursache bei Männern. Kleinzellig (SCLC, ~15 %, sehr aggressiv) und nicht-kleinzellig (NSCLC: Adeno-, Plattenepithel-, großzelliges Karzinom).",
+u:"Rauchen (≈ 85 %, auch Passivrauchen) • Asbest, Radon, Chrom, Nickel, Arsen, Uran • Luftverschmutzung, Dieselruß • Lungennarben • genetische Faktoren",
+s:"Spät symptomatisch! • neu aufgetretener oder veränderter Husten (> 3 Wochen) bei Rauchern • Hämoptysen (blutiger Auswurf) • Atemnot, Thoraxschmerz • rezidivierende Pneumonien (Retentionspneumonie) • B-Symptome: Gewichtsverlust, Fieber, Nachtschweiß • Heiserkeit (N. recurrens) • obere Einflussstauung (V. cava superior) • Horner-Syndrom (Pancoast-Tumor: Ptosis, Miosis, Enophthalmus) • paraneoplastisch: Cushing, SIADH (Hyponatriämie), Hyperkalzämie, Lambert-Eaton • Trommelschlegelfinger",
+l:"Hartnäckiger oder veränderter Raucherhusten, Hämoptysen, Gewichtsverlust",
+ko:"Metastasen: Gehirn, Knochen, Leber, Nebennieren • Pleuraerguss (maligne) • Lungenblutung • Einflussstauung",
+dd:"Tuberkulose • Pneumonie • COPD • Sarkoidose • Metastasen anderer Tumoren • Lungenabszess",
+b:"BSG ↑, Anämie • Hyponatriämie (SIADH), Hyperkalzämie • Tumormarker (NSE, CYFRA 21-1, CEA) zur Verlaufskontrolle • Röntgen/CT, Bronchoskopie mit Biopsie",
+nf:1,nfm:"Massive Hämoptyse oder akute Einflussstauung → 112."},
+
+{n:"Tuberkulose (TBC)",a:"Schwindsucht, Morbus Koch",k:"lunge",
+d:"Chronische bakterielle Infektionskrankheit durch Mycobacterium tuberculosis-Komplex, meist der Lunge, mit Bildung verkäsender Granulome. Übertragung durch Tröpfchen (offene TBC).",
+u:"Mycobacterium tuberculosis (selten M. bovis, M. africanum) • Risikofaktoren: HIV, Immunsuppression (Kortison, TNF-α-Blocker), Diabetes, Alkohol, Unterernährung, Obdachlosigkeit, Herkunft aus Hochprävalenzländern, Gefängnis • Primär-TBC (Primärkomplex: Ghon-Herd + Lymphknoten), Postprimär-TBC (Reaktivierung, Spitzenherde, Kavernen)",
+s:"Oft schleichend • Husten > 3 Wochen, ggf. blutiger Auswurf • subfebrile Temperaturen, Nachtschweiß (B-Symptome) • Gewichtsverlust, Müdigkeit, Appetitlosigkeit • Thoraxschmerz (Pleuritis) • Extrapulmonal: Lymphknoten, Niere/Harnwege (sterile Leukozyturie), Knochen (Wirbelsäule = Spondylitis tuberculosa, M. Pott), Meningitis, Miliartuberkulose (hämatogene Streuung, Kinder/Immunsupprimierte)",
+l:"Husten > 3 Wochen + Nachtschweiß + Gewichtsverlust + subfebrile Temperatur",
+ko:"Miliartuberkulose • tuberkulöse Meningitis • Kavernen, Hämoptysen • Pleuraempyem • Lungenfibrose • Organ-TBC • multiresistente Erreger",
+dd:"Bronchialkarzinom • Pneumonie • Sarkoidose • Lymphom • Lungenabszess • nichttuberkulöse Mykobakterien",
+b:"Interferon-Gamma-Test (IGRA) oder Tuberkulin-Hauttest • Sputum: Mikroskopie (säurefeste Stäbchen, Ziehl-Neelsen), Kultur, PCR • BSG ↑, Lymphozytose • Röntgen/CT",
+nf:0,bv:"§ 24 IfSG i. V. m. § 6 Abs. 1 Nr. 1 (Erkrankung und Tod an Tuberkulose meldepflichtig), § 7 (Mycobacterium tuberculosis) und § 34 (ansteckungsfähige Lungentuberkulose) • Heilpraktiker ist selbst meldepflichtig"},
+
+{n:"Pleuritis / Pleuraerguss",a:"Rippenfellentzündung, Brustfellentzündung",k:"lunge",
+d:"Pleuritis: Entzündung des Rippen-/Lungenfells – trocken (sicca, schmerzhaft) oder feucht (exsudativa, mit Erguss). Pleuraerguss: Flüssigkeitsansammlung im Pleuraspalt (Transsudat oder Exsudat).",
+u:"Transsudat (eiweißarm): Herzinsuffizienz (häufigste Ursache), Leberzirrhose, nephrotisches Syndrom, Hypoalbuminämie • Exsudat (eiweißreich): Pneumonie (parapneumonisch), Tuberkulose, Tumor (Bronchialkarzinom, Mammakarzinom, Mesotheliom bei Asbest), Lungenembolie, Pankreatitis, Kollagenosen • Pleuritis sicca: Virusinfekt (Coxsackie – Bornholm-Krankheit), Beginn einer Pneumonie/Tbc",
+s:"Pleuritis sicca: stechende, atemabhängige Schmerzen, Schonatmung, Pleurareiben („Lederknarren“) • Erguss: Schmerz lässt nach, zunehmende Atemnot, abgeschwächtes/aufgehobenes Atemgeräusch, gedämpfter Klopfschall, verminderter Stimmfremitus • Fieber je nach Ursache",
+l:"Atemabhängiger stechender Thoraxschmerz bzw. Atemnot mit Dämpfung",
+ko:"Pleuraempyem (Eiter) • Pleuraschwarte/Verklebungen • respiratorische Insuffizienz",
+dd:"Pneumonie • Lungenembolie • Pneumothorax • Interkostalneuralgie, Rippenfraktur • Herzinfarkt • Perikarditis",
+b:"Pleurapunktat: Eiweiß, LDH (Exsudat/Transsudat), Zytologie, Bakterien • BSG/CRP • BNP • Albumin • Sono/Röntgen",
+nf:0},
+
+{n:"Sarkoidose",a:"Morbus Boeck, Morbus Besnier-Boeck-Schaumann, Löfgren-Syndrom",k:"lunge",
+d:"Systemische granulomatöse Erkrankung unbekannter Ursache mit nicht verkäsenden Granulomen, v. a. in Lunge und Lymphknoten (Hili).",
+u:"Unbekannt • überschießende Immunreaktion (T-Helferzellen) auf unbekanntes Antigen • genetische Faktoren • junge Erwachsene, Frauen",
+s:"Akut (Löfgren-Syndrom): Trias aus beidseitiger Hiluslymphknotenschwellung, Erythema nodosum (Unterschenkel), Sprunggelenksarthritis, dazu Fieber • Chronisch: schleichend, oft Zufallsbefund, trockener Husten, Belastungsdyspnoe, Müdigkeit • extrapulmonal: Augen (Uveitis), Haut, Herz (Rhythmusstörungen), Nervensystem, Parotis, Hyperkalzämie",
+l:"Bihiläre Lymphknotenschwellung, Erythema nodosum, Sprunggelenksarthritis",
+ko:"Lungenfibrose, respiratorische Insuffizienz • Herzbeteiligung (plötzlicher Herztod) • Erblindung • Nierensteine (Hyperkalzämie)",
+dd:"Tuberkulose • Lymphom • Bronchialkarzinom • exogen-allergische Alveolitis • andere Lungenfibrosen",
+b:"ACE ↑, löslicher IL-2-Rezeptor ↑ • Kalzium ↑ (Serum und Urin) • BSG ↑ • Lymphopenie • Röntgen/CT, Bronchoskopie mit BAL (CD4/CD8-Quotient ↑) und Biopsie",
+nf:0},
+
+{n:"Lungenfibrose",a:"Interstitielle Lungenerkrankung, idiopathische Lungenfibrose",k:"lunge",
+d:"Bindegewebiger Umbau des Lungengerüsts (Interstitium) → Versteifung, reduzierter Gasaustausch, restriktive Ventilationsstörung.",
+u:"Idiopathisch (IPF, ältere Männer, Raucher) • Stäube (Asbestose, Silikose), exogen-allergische Alveolitis (Vogelhalter-, Farmerlunge) • Medikamente (Amiodaron, Methotrexat, Bleomycin), Bestrahlung • Kollagenosen, rheumatoide Arthritis, Sarkoidose",
+s:"Langsam zunehmende Belastungsdyspnoe • trockener Reizhusten • feines inspiratorisches Knisterrasseln („Sklerosiphonie“, Klettverschlussgeräusch) über den Unterfeldern • Trommelschlegelfinger, Uhrglasnägel • Zyanose, Tachypnoe • Müdigkeit, Gewichtsverlust",
+l:"Zunehmende Belastungsdyspnoe, trockener Husten, Knisterrasseln basal",
+ko:"Respiratorische Insuffizienz • pulmonale Hypertonie, Cor pulmonale • Lungenkarzinom • akute Exazerbation",
+dd:"Herzinsuffizienz • COPD • Sarkoidose • Pneumonie",
+b:"Blutgase (pO2 ↓ unter Belastung) • ANA, Rheumafaktor (Kollagenose) • Lungenfunktion (Vitalkapazität ↓, Diffusionskapazität ↓) • HR-CT",
+nf:0},
+
+{n:"Mukoviszidose",a:"Zystische Fibrose (CF)",k:"lunge",
+d:"Häufigste autosomal-rezessive, lebensverkürzende Stoffwechselerkrankung bei Weißen: Defekt des CFTR-Chloridkanals → zäher Schleim in allen exokrinen Drüsen.",
+u:"Mutation im CFTR-Gen (häufigste: ΔF508) • gestörter Chlorid-/Wassertransport → zähe Sekrete in Lunge, Pankreas, Darm, Gallenwegen, Samenleiter, Schweißdrüsen",
+s:"Neugeborene: Mekoniumileus • chronischer Husten, zäher Schleim, rezidivierende Bronchitiden/Pneumonien (Staph. aureus, Pseudomonas) • Gedeihstörung, Untergewicht trotz Appetit • voluminöse, fettige, übelriechende Stühle (Pankreasinsuffizienz) • salziger Schweiß („Kinder schmecken salzig“) • Nasenpolypen, Sinusitis • Trommelschlegelfinger • Unfruchtbarkeit bei Männern",
+l:"Chronische Lungeninfekte + Gedeihstörung + Fettstühle + salziger Schweiß",
+ko:"Bronchiektasen, respiratorische Insuffizienz • Diabetes mellitus • biliäre Zirrhose • Pneumothorax, Hämoptysen • Osteoporose • Infertilität",
+dd:"Asthma • Zöliakie • primäre ziliäre Dyskinesie • Immundefekte",
+b:"Schweißtest: Chlorid > 60 mmol/l • Neugeborenenscreening (immunreaktives Trypsin) • Pankreas-Elastase im Stuhl ↓ • Gentest",
+nf:0},
+
+{n:"Obstruktive Schlafapnoe",a:"Schlafapnoe-Syndrom",k:"lunge",
+d:"Wiederholte Atemaussetzer (≥ 10 Sek.) im Schlaf durch Kollaps der oberen Atemwege mit Sauerstoffabfall und Weckreaktionen.",
+u:"Übergewicht (Halsumfang ↑) • Alkohol, Schlafmittel abends • Männer, Alter • große Rachenmandeln/Zunge, Unterkieferrücklage • Rückenlage",
+s:"Lautes, unregelmäßiges Schnarchen mit Atempausen (fremdanamnestisch) • ausgeprägte Tagesmüdigkeit, Sekundenschlaf • morgendlicher Kopfschmerz, Mundtrockenheit • Konzentrationsstörung, Reizbarkeit, Depression • nächtliches Wasserlassen • Libido-/Potenzstörung",
+l:"Lautes Schnarchen mit Atempausen + Tagesmüdigkeit",
+ko:"Arterielle Hypertonie (therapieresistent) • Herzrhythmusstörungen, Herzinsuffizienz, Herzinfarkt, Schlaganfall • Unfälle (Sekundenschlaf) • Diabetes",
+dd:"Narkolepsie • Depression • Hypothyreose • Restless-Legs-Syndrom • zentrale Schlafapnoe (Herzinsuffizienz)",
+b:"Polygrafie/Polysomnografie (Apnoe-Hypopnoe-Index) • Polyglobulie möglich • TSH",
+nf:0}
+);
+
+D.push(
+{n:"Refluxkrankheit (GERD)",a:"Refluxösophagitis, Sodbrennen, Barrett-Ösophagus",k:"verdauung",
+d:"Rückfluss von saurem Mageninhalt in die Speiseröhre mit Beschwerden und/oder Schleimhautschäden (Refluxösophagitis).",
+u:"Insuffizienz des unteren Ösophagussphinkters • Hiatushernie • Übergewicht, Schwangerschaft • fettreiche Mahlzeiten, Alkohol, Kaffee, Nikotin, Schokolade • Medikamente (Kalziumantagonisten, Nitrate, Anticholinergika) • Liegen nach dem Essen",
+s:"Sodbrennen (retrosternales Brennen), v. a. nach dem Essen, im Liegen, beim Bücken • saures Aufstoßen, Regurgitation • Druckgefühl hinter dem Brustbein • Schluckbeschwerden • Reizhusten, Heiserkeit, Asthma (extraösophageal) • Zahnschmelzschäden",
+l:"Sodbrennen und saures Aufstoßen, schlimmer im Liegen",
+ko:"Barrett-Ösophagus (Präkanzerose) → Adenokarzinom • Ulzera, Blutung • Strikturen (Dysphagie) • Aspiration, Asthma",
+dd:"Angina pectoris/Herzinfarkt (!) • Ösophaguskarzinom • eosinophile Ösophagitis • Ulcus ventriculi/duodeni • Gallenkolik • Soorösophagitis",
+b:"Labor meist unauffällig (Anämie bei chron. Blutung) • Gastroskopie mit Biopsie, pH-Metrie • Alarmsymptome (Dysphagie, Gewichtsverlust, Anämie, Blutung) → Endoskopie",
+nf:0},
+
+{n:"Ösophaguskarzinom",a:"Speiseröhrenkrebs",k:"verdauung",
+d:"Bösartiger Tumor der Speiseröhre: Plattenepithelkarzinom (oberes/mittleres Drittel) oder Adenokarzinom (unteres Drittel, aus Barrett).",
+u:"Plattenepithel: Alkohol + Rauchen, heiße Getränke, Nitrosamine, Achalasie, Laugenverätzung • Adenokarzinom: Refluxkrankheit/Barrett-Ösophagus, Adipositas",
+s:"Spät symptomatisch • progrediente Dysphagie (zuerst feste, dann flüssige Nahrung) • Gewichtsverlust • retrosternale Schmerzen • Regurgitation, Aspiration • Heiserkeit (N. recurrens) • Anämie",
+l:"Zunehmende Schluckstörung mit Gewichtsverlust",
+ko:"Metastasen • ösophagotracheale Fistel, Aspirationspneumonie • Blutung • Kachexie",
+dd:"Achalasie • peptische Striktur • Refluxösophagitis • Magenkarzinom (Kardia) • Globusgefühl",
+b:"Anämie • Gastroskopie mit Biopsie, Endosonografie, CT",
+nf:0},
+
+{n:"Ösophagusvarizen / Ösophagusvarizenblutung",a:"Krampfadern der Speiseröhre",k:"verdauung",
+d:"Erweiterte Venen der unteren Speiseröhre als Umgehungskreislauf bei Pfortaderhochdruck (portale Hypertension). Blutung: lebensbedrohlicher Notfall.",
+u:"Portale Hypertension, v. a. bei Leberzirrhose (Alkohol, Hepatitis) • Pfortaderthrombose • Budd-Chiari-Syndrom",
+s:"Vor Blutung symptomlos • Blutung: schwallartiges Erbrechen von hellrotem/dunklem Blut (Hämatemesis), Teerstuhl (Meläna) • Schock (Blässe, Tachykardie, RR ↓) • Zeichen der Leberzirrhose (Ikterus, Aszites, Spider naevi, Palmarerythem)",
+l:"Massives Bluterbrechen bei Leberzirrhose",
+ko:"Hämorrhagischer Schock • hepatische Enzephalopathie (Eiweißlast aus Blut) • Aspiration • Tod (Letalität bis 30 %)",
+dd:"Ulkusblutung • Mallory-Weiss-Syndrom • erosive Gastritis • Magenkarzinom • Hämoptyse (Bluthusten)",
+b:"Hb ↓ (anfangs evtl. normal!) • Gerinnung (Quick ↓), Thrombozyten ↓ • Leberwerte, Albumin ↓, Ammoniak • Notfallendoskopie",
+nf:2,nfm:"112 • Seitenlage (Aspirationsschutz), Oberkörper leicht hoch • Schockbekämpfung (Beine hoch bei Schock) • nichts essen/trinken • Erbrochenes aufbewahren • Vitalzeichen"},
+
+{n:"Achalasie",a:"Kardiospasmus",k:"verdauung",
+d:"Motilitätsstörung der Speiseröhre durch Degeneration des Plexus myentericus: fehlende Erschlaffung des unteren Ösophagussphinkters und fehlende Peristaltik.",
+u:"Meist unbekannt (Autoimmun?) • sekundär: Chagas-Krankheit, Tumor (Pseudoachalasie)",
+s:"Dysphagie für feste UND flüssige Nahrung von Beginn an • Regurgitation unverdauter Nahrung (v. a. nachts) • retrosternale Schmerzen • Gewichtsverlust • nächtlicher Husten (Aspiration) • Mundgeruch",
+l:"Schluckstörung für Festes und Flüssiges + Regurgitation unverdauter Speisen",
+ko:"Aspirationspneumonie • Megaösophagus • Ösophaguskarzinom (erhöhtes Risiko)",
+dd:"Ösophaguskarzinom • Strikturen • Sklerodermie • diffuser Ösophagusspasmus",
+b:"Labor unauffällig • Manometrie, Röntgen-Breischluck („Sektglas-Form“), Gastroskopie",
+nf:0},
+
+{n:"Gastritis",a:"Magenschleimhautentzündung (Typ A, B, C)",k:"verdauung",
+d:"Akute oder chronische Entzündung der Magenschleimhaut. Chronisch: Typ A (autoimmun), Typ B (bakteriell, H. pylori, ~80 %), Typ C (chemisch).",
+u:"Akut: NSAR/ASS, Alkohol, Stress (Intensivpatienten), Lebensmittelvergiftung, Kortison • Typ A: Autoantikörper gegen Belegzellen und Intrinsic Factor → Vit.-B12-Mangel • Typ B: Helicobacter pylori • Typ C: NSAR, Gallereflux",
+s:"Oberbauchschmerzen, Druck- und Völlegefühl • Übelkeit, Erbrechen • Appetitlosigkeit • Aufstoßen, Mundgeruch • chronisch oft symptomarm",
+l:"Oberbauchdruck/-schmerz, Übelkeit nach NSAR/Alkohol",
+ko:"Ulcus ventriculi/duodeni • Blutung • Typ A: perniziöse Anämie, Magenkarzinom, Karzinoid • Typ B: Ulkus, Magenkarzinom, MALT-Lymphom",
+dd:"Ulkus • Reizmagen (funktionelle Dyspepsie) • Magenkarzinom • Refluxkrankheit • Gallenkolik • Pankreatitis • Herzinfarkt (Hinterwand!)",
+b:"H.-pylori-Nachweis (Atemtest, Stuhl-Antigen, Biopsie) • Typ A: Vit. B12 ↓, Parietalzell- und Intrinsic-Factor-Antikörper, Gastrin ↑ • Blutbild • Gastroskopie",
+nf:0},
+
+{n:"Ulcus ventriculi / Ulcus duodeni",a:"Magengeschwür, Zwölffingerdarmgeschwür, peptisches Ulkus",k:"verdauung",
+d:"Gewebedefekt der Magen- oder Duodenalschleimhaut, der über die Muscularis mucosae hinausreicht.",
+u:"Helicobacter pylori (Duodenum ~95 %, Magen ~75 %) • NSAR/ASS, Kortison (in Kombination) • Rauchen, Stress • Zollinger-Ellison-Syndrom (Gastrinom) • Ungleichgewicht zwischen aggressiven (Säure, Pepsin) und protektiven Faktoren (Schleim, Bikarbonat, Durchblutung)",
+s:"Ulcus ventriculi: Schmerz im Oberbauch direkt nach dem Essen (Sofortschmerz) oder nahrungsunabhängig • Ulcus duodeni: Nüchtern- und Nachtschmerz, Besserung nach Nahrungsaufnahme (Spätschmerz) • Übelkeit, Völlegefühl, Gewichtsverlust • oft symptomlos (v. a. NSAR)",
+l:"Epigastrischer Schmerz in Abhängigkeit von der Nahrungsaufnahme",
+ko:"Blutung (Hämatemesis, Teerstuhl) • Perforation (akutes Abdomen, brettharter Bauch) • Penetration (ins Pankreas) • Magenausgangsstenose • maligne Entartung (Ulcus ventriculi)",
+dd:"Gastritis • Magenkarzinom • Refluxkrankheit • Gallen- und Pankreaserkrankungen • Herzinfarkt • Reizmagen",
+b:"H.-pylori-Diagnostik • Blutbild (Anämie) • Gastroskopie mit Biopsie (Magenulkus immer biopsieren!) • Gastrin bei Rezidiven",
+nf:1,nfm:"Bluterbrechen, Teerstuhl, Schock oder plötzlicher Vernichtungsschmerz mit brettharter Bauchdecke (Perforation) → 112."},
+
+{n:"Magenkarzinom",a:"Magenkrebs",k:"verdauung",
+d:"Bösartiger Tumor der Magenschleimhaut, meist Adenokarzinom.",
+u:"Helicobacter pylori (Klasse-I-Karzinogen) • chronisch-atrophische Gastritis Typ A • Nitrosamine (Gepökeltes, Geräuchertes), salzreiche Kost • Rauchen • Z. n. Magenteilresektion • familiär, Blutgruppe A",
+s:"Lange symptomlos • Appetitlosigkeit, Abneigung gegen Fleisch • Völlegefühl, Oberbauchschmerz • Gewichtsverlust, Leistungsknick • Anämie, Teerstuhl • Übelkeit, Erbrechen • tastbarer Tumor, Virchow-Lymphknoten (links supraklavikulär) • Krukenberg-Tumor (Ovarialmetastasen)",
+l:"Fleischaversion, Völlegefühl, Gewichtsverlust bei Älteren",
+ko:"Metastasen (Leber, Peritoneum, Lunge, Ovar) • Blutung • Magenausgangsstenose • Kachexie",
+dd:"Gastritis • Ulkus • Reizmagen • MALT-Lymphom • Pankreaskarzinom",
+b:"Eisenmangelanämie • Hämoccult positiv • Tumormarker CA 72-4, CEA (Verlauf) • Gastroskopie mit Biopsie",
+nf:0},
+
+{n:"Obere / untere gastrointestinale Blutung",a:"GI-Blutung, Hämatemesis, Meläna, Hämatochezie",k:"verdauung",
+d:"Blutung aus dem Verdauungstrakt. Obere GI-Blutung: oberhalb des Treitz-Bandes (Ösophagus, Magen, Duodenum). Untere GI-Blutung: unterhalb (Dünn-, Dickdarm, Rektum).",
+u:"Obere: Ulkus (häufigste Ursache), Ösophagusvarizen, erosive Gastritis, Mallory-Weiss-Riss, Tumor • Untere: Hämorrhoiden, Divertikel, Kolonkarzinom, Polypen, Colitis ulcerosa/M. Crohn, Angiodysplasien, ischämische Kolitis • Begünstigend: Antikoagulanzien, NSAR",
+s:"Hämatemesis: Bluterbrechen (hellrot oder kaffeesatzartig) • Meläna: Teerstuhl (schwarz, glänzend, klebrig – obere Blutung) • Hämatochezie: frisches Blut im Stuhl (untere oder massive obere Blutung) • Schwäche, Schwindel, Blässe • Schockzeichen",
+l:"Bluterbrechen, Teerstuhl oder Blut im Stuhl",
+ko:"Hämorrhagischer Schock • Aspiration • Herzinfarkt (Anämie) • Tod",
+dd:"Schwarzer Stuhl durch Eisen, Kohle, Wismut, Heidelbeeren • Rote Bete • Nasenbluten (verschluckt) • Hämoptyse",
+b:"Hb ↓ (initial normal möglich!), Hkt • Harnstoff ↑ (obere Blutung) • Gerinnung • Blutgruppe/Kreuzblut • Endoskopie",
+nf:2,nfm:"112 • Schocklage (bei Bluterbrechen Seitenlage, Aspirationsschutz) • nichts essen/trinken • Wärmeerhalt • Vitalzeichen • Erbrochenes/Stuhl aufbewahren"},
+
+{n:"Zöliakie",a:"Glutensensitive Enteropathie, einheimische Sprue",k:"verdauung",
+d:"Chronische, immunvermittelte Unverträglichkeit von Gluten (Klebereiweiß in Weizen, Roggen, Gerste, Dinkel) mit Zottenatrophie der Dünndarmschleimhaut → Malabsorption.",
+u:"Genetische Disposition (HLA-DQ2/DQ8) • Gluten (Gliadin) → Autoimmunreaktion gegen Gewebstransglutaminase • Assoziation mit Diabetes Typ 1, Hashimoto, Down-Syndrom, IgA-Mangel",
+s:"Kinder: nach Einführung von Getreide Gedeihstörung, voluminöse, fettige, übelriechende Durchfälle, aufgetriebener Bauch („Tabaksbeutelgesäß“), Missmut • Erwachsene oft oligosymptomatisch: Durchfall, Blähungen, Bauchschmerzen, Müdigkeit, Gewichtsverlust • Mangelerscheinungen: Eisenmangelanämie, Osteoporose, Ödeme, Blutungsneigung (Vit. K), Nachtblindheit (Vit. A) • Dermatitis herpetiformis Duhring (juckende Bläschen)",
+l:"Chronischer Durchfall, Gewichtsverlust/Gedeihstörung und Mangelerscheinungen nach Glutenkonsum",
+ko:"Malabsorption, Osteoporose • Anämie • Dünndarmlymphom (T-Zell-Lymphom), Karzinome • refraktäre Sprue",
+dd:"Laktoseintoleranz • Reizdarm • M. Crohn • Mukoviszidose • Nahrungsmittelallergie • Weizensensitivität • Lambliasis",
+b:"Gewebstransglutaminase-IgA-AK (tTG), Endomysium-AK (EMA), Gesamt-IgA (IgA-Mangel ausschließen!) • Eisen/Ferritin, Folsäure, B12 ↓, Albumin ↓, Kalzium ↓ • Dünndarmbiopsie (Zottenatrophie) – Diagnostik VOR glutenfreier Diät",
+nf:0},
+
+{n:"Morbus Crohn",a:"Enteritis regionalis, Ileitis terminalis",k:"verdauung",
+d:"Chronisch-entzündliche Darmerkrankung, die diskontinuierlich (segmental) den gesamten Verdauungstrakt vom Mund bis zum After befallen kann, bevorzugt terminales Ileum. Entzündung aller Wandschichten (transmural).",
+u:"Multifaktoriell: genetisch (NOD2), Störung der Darmbarriere und des Immunsystems, Mikrobiom • Rauchen verschlechtert • Erkrankungsgipfel 15–35 Jahre",
+s:"Chronische Durchfälle (meist ohne Blut) • krampfartige Bauchschmerzen, v. a. rechter Unterbauch (DD Appendizitis!) • Gewichtsverlust, Fieber, Müdigkeit • tastbare Resistenz rechter Unterbauch • Fisteln, Abszesse (perianal) • Aphthen im Mund • extraintestinal: Arthritis, Erythema nodosum, Uveitis/Iritis, PSC (seltener als bei Colitis) • Kinder: Wachstumsverzögerung",
+l:"Chronische Durchfälle + Schmerzen im rechten Unterbauch + Fisteln",
+ko:"Fisteln, Abszesse • Stenosen, Ileus • Malabsorption (Vit. B12, Gallensäureverlust → Gallen-, Nierensteine) • toxisches Megakolon (selten) • Perforation • Kolonkarzinom-Risiko ↑",
+dd:"Colitis ulcerosa • Appendizitis • infektiöse Enteritis (Yersinien!) • Reizdarm • Zöliakie • Darmtuberkulose • Lymphom",
+b:"CRP/BSG ↑, Leukozytose, Thrombozytose • Anämie, B12 ↓, Albumin ↓ • Calprotectin im Stuhl ↑ • ASCA (eher Crohn) • Koloskopie mit Biopsie (Pflastersteinrelief, Granulome)",
+nf:1,nfm:"Ileus, Perforation, toxisches Megakolon (hohes Fieber, aufgetriebener Bauch) → 112."},
+
+{n:"Colitis ulcerosa",a:"Ulzerative Kolitis",k:"verdauung",
+d:"Chronisch-entzündliche Darmerkrankung, die kontinuierlich vom Rektum aus nach proximal den Dickdarm befällt; nur Schleimhaut (Mukosa/Submukosa) betroffen.",
+u:"Multifaktoriell (genetisch, immunologisch, Mikrobiom) • Nichtraucher häufiger betroffen • Gipfel 20–40 Jahre",
+s:"Blutig-schleimige Durchfälle (Leitsymptom), bis 20×/Tag • Tenesmen (schmerzhafter Stuhldrang), auch nachts • linksseitige Unterbauchkrämpfe • Fieber, Gewichtsverlust, Anämie • extraintestinal: primär sklerosierende Cholangitis (PSC), Arthritis, Erythema nodosum, Pyoderma gangraenosum, Uveitis",
+l:"Blutig-schleimige Durchfälle mit Tenesmen",
+ko:"Toxisches Megakolon (Notfall) • massive Blutung • Perforation • Kolonkarzinom (Risiko steigt mit Dauer und Ausdehnung) • PSC → Cholangiokarzinom",
+dd:"M. Crohn • infektiöse Kolitis (Salmonellen, Shigellen, Campylobacter, C. difficile, Amöben) • ischämische Kolitis • Kolonkarzinom • Divertikulitis",
+b:"CRP/BSG ↑, Anämie, Leukozytose • Calprotectin im Stuhl ↑ • p-ANCA (eher Colitis) • Stuhlkultur (Infektion ausschließen) • Koloskopie mit Biopsie (Kryptenabszesse, Pseudopolypen)",
+nf:1,nfm:"Toxisches Megakolon (Fieber, aufgetriebener Bauch, Tachykardie, Schock) oder massive Blutung → 112."},
+
+{n:"Reizdarmsyndrom",a:"Colon irritabile, funktionelle Darmbeschwerden",k:"verdauung",
+d:"Funktionelle Darmstörung mit chronischen (> 3 Monate) Bauchbeschwerden und veränderten Stuhlgewohnheiten ohne nachweisbare organische Ursache. Ausschlussdiagnose.",
+u:"Viszerale Hypersensitivität • gestörte Darmmotilität, Darm-Hirn-Achse • nach Darminfekt (postinfektiös) • Stress, psychische Faktoren • Mikrobiom-Veränderungen",
+s:"Bauchschmerzen/-krämpfe, die sich nach dem Stuhlgang bessern • Blähungen, Völlegefühl • Durchfall, Verstopfung oder Wechsel • schleimige Stühle, Gefühl unvollständiger Entleerung • KEINE Alarmsymptome (kein Blut, kein Gewichtsverlust, kein nächtlicher Durchfall, kein Fieber)",
+l:"Chronische Bauchschmerzen mit Stuhlunregelmäßigkeiten ohne Alarmzeichen",
+ko:"Keine organischen Komplikationen • Einschränkung der Lebensqualität, Angst, Depression",
+dd:"Chronisch-entzündliche Darmerkrankungen • Zöliakie • Laktose-/Fruktoseintoleranz • Kolonkarzinom (Alter > 50, Alarmsymptome!) • mikroskopische Kolitis • Lambliasis • Hyperthyreose • Endometriose",
+b:"Ausschlussdiagnostik: Blutbild, CRP, TSH, Transglutaminase-AK, Calprotectin im Stuhl (normal), Stuhl auf Parasiten • H2-Atemtests • Koloskopie (ab 50 J. oder bei Alarmsymptomen)",
+nf:0},
+
+{n:"Divertikulose / Divertikulitis",a:"Darmdivertikel",k:"verdauung",
+d:"Divertikulose: Ausstülpungen der Darmschleimhaut durch Muskellücken der Darmwand, meist im Sigma. Divertikulitis: Entzündung dieser Divertikel („Linksappendizitis“).",
+u:"Ballaststoffarme Ernährung, Obstipation (erhöhter Innendruck) • Alter, Bindegewebsschwäche • Übergewicht, Bewegungsmangel • NSAR, Rauchen",
+s:"Divertikulose: meist symptomlos • Divertikulitis: Schmerzen im linken Unterbauch („Linksappendizitis“), Fieber, Stuhlunregelmäßigkeiten, tastbare walzenförmige druckschmerzhafte Resistenz, lokale Abwehrspannung • Übelkeit, Blähungen",
+l:"Linksseitiger Unterbauchschmerz mit Fieber beim älteren Menschen",
+ko:"Perforation, Peritonitis • Abszess • Fisteln (Blase: Pneumaturie) • Stenose, Ileus • Divertikelblutung (schmerzlos, massiv)",
+dd:"Kolonkarzinom • Colitis • Appendizitis (rechts) • Adnexitis, Extrauteringravidität, Ovarialtorsion • Harnleiterstein • Reizdarm",
+b:"Leukozytose, CRP ↑ • Urinstatus • Sonografie, CT • Koloskopie im entzündungsfreien Intervall (Karzinomausschluss)",
+nf:1,nfm:"Zeichen der Perforation/Peritonitis (bretthart, Schock) oder starke Blutung → 112."},
+
+{n:"Appendizitis",a:"Blinddarmentzündung, Wurmfortsatzentzündung",k:"verdauung",
+d:"Akute Entzündung des Wurmfortsatzes (Appendix vermiformis). Häufigste Ursache des akuten Abdomens, Gipfel 10–30 Jahre.",
+u:"Verlegung des Lumens (Kotstein, Lymphknotenschwellung, Fremdkörper, Würmer) → Sekretstau → bakterielle Entzündung",
+s:"Schmerzbeginn periumbilikal/epigastrisch, nach Stunden Wanderung in den rechten Unterbauch • Appetitlosigkeit, Übelkeit, Erbrechen • leichtes Fieber, rektal-axilläre Temperaturdifferenz > 1 °C • Druckschmerz McBurney-/Lanz-Punkt • Blumberg-Zeichen (kontralateraler Loslassschmerz) • Rovsing-Zeichen (Schmerz bei Ausstreichen des Kolons Richtung Zäkum) • Psoas-Zeichen (Schmerz bei Anheben des rechten Beins gegen Widerstand) • Douglas-Schmerz • Schmerzen beim Hüpfen auf dem rechten Bein • Ältere/Schwangere/Kinder: oft atypisch",
+l:"Wandernder Schmerz vom Nabel in den rechten Unterbauch mit Übelkeit",
+ko:"Perforation (nach 24–48 Std.; scheinbar „Besserung“, dann Peritonitis) • perityphlitischer Abszess • Peritonitis, Sepsis • Ileus",
+dd:"Gastroenteritis • Lymphadenitis mesenterialis (Yersinien) • M. Crohn • Extrauteringravidität, Ovarialtorsion, Adnexitis, Ovarialzyste • Ureterstein • Meckel-Divertikel • Hodentorsion • Pneumonie (Kinder)",
+b:"Leukozytose (10.000–15.000), CRP ↑ (anfangs evtl. normal) • Urinstatus (DD Stein/HWI) • Schwangerschaftstest • Sonografie",
+nf:2,nfm:"Sofort Klinik/112 • nichts essen/trinken (OP) • Knierolle/Beine anziehen • keine Wärme, keine Abführmittel, keine Schmerzmittel, die die Diagnose verschleiern"},
+
+{n:"Ileus",a:"Darmverschluss (mechanisch / paralytisch)",k:"verdauung",
+d:"Störung der Darmpassage. Mechanischer Ileus: Hindernis (Obstruktion/Strangulation). Paralytischer Ileus: Darmlähmung.",
+u:"Mechanisch: Verwachsungen/Briden (häufigste Ursache Dünndarm), Hernien (Einklemmung), Tumor (häufigste Ursache Dickdarm), Volvulus, Invagination (Kleinkinder), Kotsteine, Gallensteine • Paralytisch: Peritonitis, Pankreatitis, nach OP, Mesenterialinfarkt, Hypokaliämie, Medikamente (Opiate), Nierenkolik, Diabetes",
+s:"Mechanisch: kolikartige Bauchschmerzen, klingende, hochgestellte, „metallische“ Darmgeräusche (Hyperperistaltik) • Paralytisch: „Totenstille“ im Bauch, kaum Schmerz • Stuhl- und Windverhalt • Erbrechen (hoher Ileus früh, tiefer spät; Miserere = Koterbrechen) • aufgetriebener Bauch (Meteorismus) • Exsikkose, Schock",
+l:"Stuhl- und Windverhalt, Erbrechen, geblähter Bauch",
+ko:"Hypovolämischer Schock • Durchwanderungsperitonitis, Sepsis • Darmnekrose, Perforation • Elektrolytentgleisung • Aspiration • Tod",
+dd:"Akute Pankreatitis • Mesenterialinfarkt • Gastroenteritis • Pseudoobstruktion • Obstipation",
+b:"Elektrolyte (Kalium!), Kreatinin • Leukozytose, CRP • Laktat (Ischämie) • Röntgen-Abdomen (Spiegel), Sonografie, CT",
+nf:2,nfm:"112 • nichts essen/trinken • Knierolle, Oberkörper leicht hoch • bei Erbrechen Seitenlage • Schockbekämpfung • keine Abführmittel, keine Einläufe"},
+
+{n:"Kolorektales Karzinom",a:"Darmkrebs, Kolonkarzinom, Rektumkarzinom",k:"verdauung",
+d:"Bösartiger Tumor des Dickdarms oder Mastdarms (Adenokarzinom), entsteht meist über Jahre aus Adenomen (Adenom-Karzinom-Sequenz).",
+u:"Alter > 50 • Adenome (Polypen) • ballaststoffarme, fett- und fleischreiche Ernährung (rotes/verarbeitetes Fleisch), Übergewicht, Bewegungsmangel, Alkohol, Rauchen • chronisch-entzündliche Darmerkrankungen • genetisch: familiäre adenomatöse Polyposis (FAP), Lynch-Syndrom (HNPCC), familiäre Häufung",
+s:"Lange symptomlos • Blut im Stuhl (sichtbar oder okkult) • veränderte Stuhlgewohnheiten (Wechsel Durchfall/Verstopfung, „paradoxe Diarrhö“, Bleistiftstühle) • unwillkürlicher Windabgang mit Stuhl („falscher Freund“) • Bauchschmerzen, Blähungen • Gewichtsverlust, Leistungsknick, Anämie • tastbarer Tumor (rektal)",
+l:"Veränderte Stuhlgewohnheiten + Blut im Stuhl ab 50",
+ko:"Ileus • Perforation, Blutung • Metastasen (Leber, Lunge) • Fisteln",
+dd:"Hämorrhoiden (Blut immer abklären!) • Divertikulitis • chronisch-entzündliche Darmerkrankung • Reizdarm • Polypen",
+b:"Eisenmangelanämie • immunologischer Stuhltest (iFOBT) positiv • CEA (Verlaufsmarker) • Koloskopie mit Biopsie (Vorsorge ab 50)",
+nf:0},
+
+{n:"Hämorrhoiden",a:"Hämorrhoidalleiden",k:"verdauung",
+d:"Vergrößerung der arteriovenösen Gefäßpolster (Corpus cavernosum recti) oberhalb der Linea dentata, Stadien I–IV.",
+u:"Chronische Obstipation, starkes Pressen • ballaststoffarme Ernährung • sitzende Tätigkeit, Übergewicht • Schwangerschaft • Bindegewebsschwäche",
+s:"Hellrotes Blut auf dem Stuhl/Toilettenpapier (schmerzlos) • Juckreiz, Brennen, Nässen • Fremdkörpergefühl • Prolaps (ab Grad II beim Pressen, Grad IV fixiert)",
+l:"Schmerzlose hellrote Blutauflagerungen + Juckreiz",
+ko:"Anämie (chronische Blutung) • Thrombose, Inkarzeration (schmerzhaft) • Analekzem",
+dd:"Kolorektales Karzinom (Blut immer abklären!) • Analfissur (schmerzhaft) • Analvenenthrombose • Analfistel • Rektumprolaps • Condylomata",
+b:"Blutbild • Proktoskopie • Koloskopie zum Ausschluss eines Karzinoms",
+nf:0},
+
+{n:"Hernien",a:"Leistenbruch, Nabelbruch, Narbenbruch, Schenkelbruch, Hiatushernie",k:"verdauung",
+d:"Austritt von Bauchinhalt (Bruchsack mit Bruchinhalt) durch eine angeborene oder erworbene Lücke der Bauchwand (Bruchpforte).",
+u:"Bindegewebsschwäche • erhöhter Bauchinnendruck: Pressen, Husten, schweres Heben, Übergewicht, Schwangerschaft, Aszites • Narben nach OP • Leistenhernie: Männer, Schenkelhernie: Frauen",
+s:"Schwellung (beim Pressen/Husten/Stehen größer, im Liegen zurückgehend) • Ziehen, Druckgefühl • Schmerzen bei Belastung • Inkarzeration: plötzlich schmerzhafte, harte, nicht reponierbare Schwellung, Übelkeit, Erbrechen, Ileus",
+l:"Vorwölbung, die beim Pressen hervortritt und im Liegen verschwindet",
+ko:"Inkarzeration (Einklemmung) → Darmnekrose, Ileus, Peritonitis (Notfall)",
+dd:"Lymphknotenschwellung • Hydrozele, Varikozele • Lipom • Senkungsabszess • Hodentumor • Aneurysma der A. femoralis",
+b:"Klinische Untersuchung, Sonografie • Labor bei Inkarzeration (Leukozyten, Laktat)",
+nf:1,nfm:"Eingeklemmter Bruch (hart, schmerzhaft, nicht zurückschiebbar, Erbrechen) → sofort Klinik/112, nicht gewaltsam reponieren."},
+
+{n:"Mesenterialinfarkt",a:"Akute Mesenterialischämie, Darminfarkt",k:"verdauung",
+d:"Akuter Verschluss einer Darmarterie (meist A. mesenterica superior) mit Ischämie und Nekrose des Darms. Hohe Letalität.",
+u:"Embolie (meist aus dem Herzen bei Vorhofflimmern) • arterielle Thrombose bei Arteriosklerose • nicht-okklusiv bei Herzinsuffizienz/Schock • Mesenterialvenenthrombose • Vorläufer: Angina abdominalis (Bauchschmerz nach dem Essen)",
+s:"Typischer 3-Phasen-Verlauf: 1. Initialstadium (0–6 Std.): stärkste Bauchschmerzen, Übelkeit, Durchfall, Schock – bei weichem Bauch (Diskrepanz Befund/Beschwerden!) • 2. Latenzstadium (7–12 Std.): „fauler Friede“, Schmerzen lassen nach • 3. Endstadium (12–24 Std.): paralytischer Ileus, Durchwanderungsperitonitis, blutige Stühle, Schock",
+l:"Heftigster Bauchschmerz bei weichem Bauch, Patient mit Vorhofflimmern",
+ko:"Darmnekrose, Perforation, Peritonitis • Sepsis, Multiorganversagen • Tod (Letalität 60–90 %)",
+dd:"Akute Pankreatitis • Perforation • Ileus • Aortenaneurysmaruptur • Herzinfarkt • Nierenkolik",
+b:"Laktat ↑ (spät) • Leukozytose • D-Dimere ↑ • CK, LDH ↑ • metabolische Azidose • CT-Angiografie",
+nf:2,nfm:"112 • Knierolle, nichts essen/trinken • Schockbekämpfung • Vitalzeichen"},
+
+{n:"Akutes Abdomen",a:"Akuter Bauch",k:"verdauung",
+d:"Sammelbegriff für akut einsetzende, starke, lebensbedrohliche Bauchschmerzen, die eine sofortige Abklärung und oft Operation erfordern.",
+u:"Entzündung: Appendizitis, Cholezystitis, Divertikulitis, Pankreatitis, Adnexitis • Perforation: Ulkus, Divertikel, Gallenblase • Obstruktion: Ileus, Gallen-/Nierenkolik, eingeklemmte Hernie, Volvulus • Durchblutungsstörung: Mesenterialinfarkt, Aortenaneurysmaruptur, Hodentorsion, Ovarialtorsion • Blutung: Extrauteringravidität, Milzruptur • Extraabdominal: Herzinfarkt (Hinterwand), Pneumonie, Ketoazidose, Porphyrie",
+s:"Akuter starker Bauchschmerz • Abwehrspannung (lokal oder brettharter Bauch) • Übelkeit, Erbrechen • Stuhl- und Windverhalt oder Durchfall • Fieber • Schockzeichen • gekrümmte Schonhaltung",
+l:"Plötzlicher starker Bauchschmerz + Abwehrspannung + Kreislaufreaktion",
+ko:"Peritonitis, Sepsis • Schock • Multiorganversagen • Tod",
+dd:"Siehe Ursachen – immer an extraabdominale Ursachen (Herzinfarkt!, Pneumonie, Ketoazidose) und gynäkologische (Extrauteringravidität) denken",
+b:"Blutbild, CRP, Lipase, Leberwerte, Kreatinin, Elektrolyte, Laktat, BZ • Troponin • Urinstatus, Schwangerschaftstest • Sonografie, CT",
+nf:2,nfm:"112 • Knierolle (Bauchdecke entspannen) • nichts essen/trinken/rauchen • keine Schmerzmittel, keine Abführmittel, keine Wärme • Schockbekämpfung • Vitalzeichen"},
+
+{n:"Laktoseintoleranz",a:"Milchzuckerunverträglichkeit, Laktasemangel",k:"verdauung",
+d:"Unverträglichkeit von Milchzucker durch Mangel des Enzyms Laktase im Dünndarm → unverdaute Laktose wird im Dickdarm bakteriell vergoren.",
+u:"Primär (genetisch, häufig, v. a. Asiaten/Afrikaner; Laktaseaktivität nimmt nach dem Abstillen ab) • sekundär: Schädigung der Dünndarmschleimhaut (Zöliakie, M. Crohn, Gastroenteritis, Chemotherapie)",
+s:"30 Min.–2 Std. nach Milchprodukten: Blähungen, Bauchkrämpfe, Durchfall, Übelkeit, Darmgeräusche (Borborygmen)",
+l:"Blähungen und Durchfall nach Milchkonsum",
+ko:"Keine schwerwiegenden • ggf. Kalziummangel bei Milchverzicht",
+dd:"Reizdarm • Fruktosemalabsorption • Zöliakie • Kuhmilchallergie (Kinder) • chronisch-entzündliche Darmerkrankung",
+b:"H2-Atemtest • Laktosetoleranztest (BZ-Anstieg < 20 mg/dl) • Gentest",
+nf:0}
+);
+
+D.push(
+{n:"Hepatitis A",a:"Virushepatitis A, Reisehepatitis",k:"leber",
+d:"Akute Leberentzündung durch das Hepatitis-A-Virus (RNA). Fäkal-oral übertragen, heilt fast immer folgenlos aus, nie chronisch. Lebenslange Immunität.",
+u:"Hepatitis-A-Virus (Picornavirus) • fäkal-orale Übertragung: verunreinigtes Wasser, Lebensmittel (Muscheln, Salate, Obst), Schmierinfektion • Reisen in Endemiegebiete • Inkubationszeit 15–50 Tage (ca. 4 Wochen)",
+s:"Kinder meist symptomlos • Prodromalstadium: grippeähnlich, Appetitlosigkeit, Übelkeit, Abneigung gegen Fett/Alkohol/Nikotin, Druck im rechten Oberbauch, Fieber • ikterische Phase: Ikterus (Haut, Skleren), dunkler Urin, heller (acholischer) Stuhl, Juckreiz • Hepatomegalie, ggf. Splenomegalie",
+l:"Ikterus mit dunklem Urin und hellem Stuhl nach Reise",
+ko:"Selten fulminante Hepatitis (akutes Leberversagen, v. a. Ältere/Vorgeschädigte) • cholestatischer Verlauf • Rückfall • KEINE Chronifizierung",
+dd:"Andere Virushepatitiden (B, C, E, EBV, CMV) • toxische/medikamentöse Hepatitis • Alkoholhepatitis • Gallenwegsverschluss • Hämolyse",
+b:"GPT > GOT stark ↑ (bis > 1000 U/l) • Bilirubin ↑ • Anti-HAV-IgM positiv = frische Infektion; Anti-HAV-IgG = Immunität/Impfung • Quick (Leberfunktion)",
+nf:0,bv:BV6+" • zusätzlich § 7 (Hepatitis-A-Virus) und § 34 (Hepatitis A)"},
+
+{n:"Hepatitis B",a:"Virushepatitis B, Serumhepatitis",k:"leber",
+d:"Leberentzündung durch das Hepatitis-B-Virus (DNA-Virus). Parenteral und sexuell übertragen. Bei Erwachsenen ca. 5–10 % chronischer Verlauf, bei Neugeborenen ca. 90 %.",
+u:"Hepatitis-B-Virus (Hepadnavirus) • Übertragung: Blut (Nadelstich, i.v.-Drogen, Tätowierung, Piercing), sexuell, perinatal (Mutter → Kind) • Inkubationszeit 30–180 Tage (1–6 Monate) • Leberschaden durch die Immunreaktion",
+s:"Ca. 2/3 symptomlos/anikterisch • Prodromalstadium: Müdigkeit, Appetitlosigkeit, Übelkeit, Gelenkschmerzen, Exanthem (Immunkomplexe), Fieber • ikterische Phase: Ikterus, dunkler Urin, heller Stuhl, Juckreiz, Lebervergrößerung, Druckschmerz rechter Oberbauch • Chronisch: oft symptomarm, Müdigkeit, Leistungsminderung",
+l:"Müdigkeit, Ikterus, Oberbauchdruck – Risikoanamnese (Blut/Sexualkontakte)",
+ko:"Fulminante Hepatitis (ca. 1 %) • chronische Hepatitis → Leberzirrhose → hepatozelluläres Karzinom • Superinfektion mit Hepatitis D • extrahepatisch: Panarteriitis nodosa, Glomerulonephritis",
+dd:"Andere Virushepatitiden • Alkohol-/medikamentös-toxische Hepatitis • Autoimmunhepatitis • Gallenwegserkrankungen • Mononukleose",
+b:"GPT, GOT stark ↑, Bilirubin ↑ • HBs-Ag (Infektion), HBe-Ag und HBV-DNA (Infektiosität), Anti-HBc-IgM (frische Infektion), Anti-HBc-IgG (durchgemachte Infektion), Anti-HBs (Immunität/Impfung – alleiniger Anti-HBs = Impfung) • HBs-Ag > 6 Monate = chronisch",
+nf:0,bv:BV6+" • zusätzlich § 7 (Hepatitis-B-Virus) • gleichzeitig sexuell übertragbar"},
+
+{n:"Hepatitis C",a:"Virushepatitis C",k:"leber",
+d:"Leberentzündung durch das Hepatitis-C-Virus (RNA). Meist symptomarm, chronifiziert in ca. 50–80 %. Heute mit antiviralen Medikamenten in > 95 % heilbar. Keine Impfung.",
+u:"Hepatitis-C-Virus (Flavivirus) • Übertragung überwiegend über Blut: i.v.-Drogen (gemeinsames Spritzbesteck), früher Bluttransfusionen, Tätowierung, Nadelstich • sexuell und perinatal selten • Inkubationszeit 2–26 Wochen",
+s:"Akut meist symptomlos (ca. 75 %) • unspezifisch: Müdigkeit, Leistungsminderung, Oberbauchdruck, Gelenkbeschwerden • Ikterus selten • chronisch: jahrelang symptomarm, Müdigkeit",
+l:"Unspezifische Müdigkeit mit erhöhten Leberwerten bei Risikoanamnese",
+ko:"Chronische Hepatitis (50–80 %) → Leberzirrhose (ca. 20 % nach 20 Jahren) → hepatozelluläres Karzinom • extrahepatisch: Kryoglobulinämie, Glomerulonephritis, Porphyria cutanea tarda, Non-Hodgkin-Lymphom, Lichen ruber, Sjögren",
+dd:"Andere Hepatitiden • Fettleber • Alkoholschaden • Autoimmunhepatitis • Hämochromatose",
+b:"Transaminasen ↑ (oft nur mäßig, schwankend) • Anti-HCV-Antikörper (Suchtest) • HCV-RNA (PCR) beweist aktive Infektion • Genotypisierung",
+nf:0,bv:BV6+" • zusätzlich § 7 (Hepatitis-C-Virus)"},
+
+{n:"Hepatitis D und E",a:"Virushepatitis D (Delta), Virushepatitis E",k:"leber",
+d:"Hepatitis D: defektes RNA-Virus, das nur zusammen mit Hepatitis B vorkommt (Simultan- oder Superinfektion) – schwerster Verlauf. Hepatitis E: meist selbstlimitierende Hepatitis, fäkal-oral bzw. über Schweinefleisch/Wild übertragen.",
+u:"HDV: Blut, sexuell; nur bei HBs-Ag-Trägern • HEV: in Europa v. a. Genotyp 3 über rohes/ungenügend gegartes Schweinefleisch, Wild, Innereien (Zoonose); in Entwicklungsländern über Trinkwasser • Inkubation HEV 15–64 Tage",
+s:"Wie andere akute Hepatitiden: Müdigkeit, Übelkeit, Ikterus, dunkler Urin, Oberbauchbeschwerden • HEV oft symptomlos",
+l:"Akute Hepatitis; HDV verschlechtert eine bekannte Hepatitis B",
+ko:"HDV: fulminante Hepatitis, rasche Zirrhose (Superinfektion chronifiziert in ~90 %) • HEV: fulminant bei Schwangeren (Letalität bis 20 %, Genotyp 1/2), chronisch bei Immunsupprimierten",
+dd:"Andere Virushepatitiden • toxische Hepatitis • Autoimmunhepatitis",
+b:"Transaminasen ↑, Bilirubin ↑ • Anti-HDV, HDV-RNA (nur bei HBs-Ag positiv) • Anti-HEV-IgM, HEV-RNA",
+nf:0,bv:BV6+" • zusätzlich § 7 (Hepatitis-D-/-E-Virus) • Hepatitis E auch § 34"},
+
+{n:"Fettleber",a:"Steatosis hepatis, NAFLD/MASLD, Fettleberhepatitis (NASH/MASH)",k:"leber",
+d:"Einlagerung von Fett in > 5 % der Leberzellen. Alkoholisch (ALD) oder nicht-alkoholisch (NAFLD, heute MASLD = stoffwechselassoziiert). Entzündliche Form: Steatohepatitis.",
+u:"Alkohol • Übergewicht, metabolisches Syndrom, Diabetes Typ 2, Fettstoffwechselstörung • Medikamente (Kortison, Methotrexat, Tamoxifen, Amiodaron) • Mangelernährung, Fasten • Schwangerschaftsfettleber (selten, akut)",
+s:"Meist symptomlos • Druck-/Völlegefühl im rechten Oberbauch • Müdigkeit • vergrößerte, weiche, glatte Leber tastbar",
+l:"Symptomlos, Zufallsbefund: vergrößerte Leber, erhöhte Leberwerte, metabolisches Syndrom",
+ko:"Steatohepatitis → Leberfibrose → Leberzirrhose → hepatozelluläres Karzinom • erhöhtes Herz-Kreislauf-Risiko",
+dd:"Virushepatitis • Hämochromatose • M. Wilson • Autoimmunhepatitis • medikamentös-toxischer Leberschaden",
+b:"γ-GT ↑ (Alkohol), GPT/GOT leicht ↑ (GOT/GPT > 2 → Alkohol) • Triglyzeride, BZ, HbA1c • MCV ↑, CDT ↑ (Alkohol) • Ferritin • Sonografie (helle „weiße“ Leber), Fibroscan",
+nf:0},
+
+{n:"Leberzirrhose",a:"Schrumpfleber",k:"leber",
+d:"Irreversibler Endzustand chronischer Lebererkrankungen: Zerstörung der Läppchenstruktur mit bindegewebigem Umbau und Bildung von Regeneratknoten → Leberinsuffizienz und Pfortaderhochdruck.",
+u:"Alkohol (ca. 50 %) • chronische Virushepatitis B, C, D • Fettleber (MASLD) • Autoimmunhepatitis, PBC, PSC • Hämochromatose, M. Wilson, α1-Antitrypsin-Mangel • Rechtsherzinsuffizienz (Cirrhose cardiaque) • Medikamente/Toxine",
+s:"Leberhautzeichen: Spider naevi, Palmarerythem, Lacklippen/-zunge, Weißnägel, Dupuytren-Kontraktur, Bauchglatze, Gynäkomastie, Hodenatrophie, Libidoverlust • Ikterus, Juckreiz • Müdigkeit, Leistungsminderung, Gewichtsverlust, Muskelschwund • Pfortaderhochdruck: Aszites, Splenomegalie, Caput medusae, Ösophagusvarizen, Hämorrhoiden • Blutungsneigung (Hämatome) • Ödeme • tastbar derbe, höckrige Leber (später klein) • Foetor hepaticus",
+l:"Leberhautzeichen + Aszites + Ikterus",
+ko:"Ösophagusvarizenblutung • hepatische Enzephalopathie, Leberkoma • Aszites mit spontan bakterieller Peritonitis • hepatorenales Syndrom • hepatozelluläres Karzinom • Gerinnungsstörung • Infektionen",
+dd:"Herzinsuffizienz (Aszites, Ödeme) • nephrotisches Syndrom • Peritonealkarzinose • Budd-Chiari-Syndrom",
+b:"Albumin ↓, Quick ↓/INR ↑, Cholinesterase ↓ (Syntheseleistung) • Bilirubin ↑ • Thrombozyten ↓ (Hypersplenismus) • Transaminasen (normal bis mäßig ↑), γ-GT ↑ • Ammoniak ↑ • Na ↓ • AFP (HCC-Screening) • Child-Pugh-Klassifikation • Sonografie, Fibroscan",
+nf:1,nfm:"Bluterbrechen/Teerstuhl, zunehmende Verwirrtheit/Schläfrigkeit (Enzephalopathie), Fieber mit Aszites → 112."},
+
+{n:"Hepatische Enzephalopathie / Leberkoma",a:"Coma hepaticum",k:"leber",
+d:"Potenziell reversible Funktionsstörung des Gehirns durch mangelnde Entgiftungsleistung der Leber (v. a. Ammoniak) bei schwerer Lebererkrankung, Stadien I–IV.",
+u:"Leberzirrhose, akutes Leberversagen • Auslöser: GI-Blutung (Eiweißlast), eiweißreiche Kost, Infektionen, Obstipation, Diuretika/Elektrolytstörung, Sedativa, Alkohol, Exsikkose",
+s:"Stadium I: Konzentrationsstörung, Verlangsamung, verwaschene Sprache, Schlafumkehr • II: Schläfrigkeit, Flattertremor (Asterixis), Schriftveränderung, Desorientierung • III: Somnolenz, Verwirrtheit • IV: Koma • Foetor hepaticus (süßlich-erdiger Mundgeruch)",
+l:"Verwirrtheit/Schläfrigkeit + Flattertremor bei Leberkranken",
+ko:"Koma, Hirnödem • Aspiration • Tod",
+dd:"Alkoholintoxikation, Delir • Hypoglykämie • Subduralhämatom (Sturz, Gerinnungsstörung!) • Elektrolytstörung • Wernicke-Enzephalopathie • Sepsis",
+b:"Ammoniak ↑ • Leberwerte, Quick ↓ • Elektrolyte (K ↓, Na ↓) • BZ • Infektparameter • EEG",
+nf:2,nfm:"112 • stabile Seitenlage bei Bewusstseinstrübung • BZ messen • Vitalzeichen • nichts essen/trinken"},
+
+{n:"Leberzellkarzinom",a:"Hepatozelluläres Karzinom (HCC), Leberkrebs",k:"leber",
+d:"Primärer bösartiger Tumor der Leberzellen, meist auf dem Boden einer Leberzirrhose. (Lebermetastasen anderer Tumoren sind deutlich häufiger.)",
+u:"Leberzirrhose jeder Ursache (80 %) • chronische Hepatitis B (auch ohne Zirrhose) und C • Alkohol • Fettleber/MASH • Aflatoxin (Schimmelpilz) • Hämochromatose",
+s:"Oft lange symptomlos • Verschlechterung einer bekannten Zirrhose • Oberbauchschmerzen, tastbare Resistenz • Gewichtsverlust, Appetitlosigkeit • Ikterus, Aszites • B-Symptome",
+l:"Rasche Verschlechterung einer Leberzirrhose mit Gewichtsverlust",
+ko:"Tumorruptur mit Blutung • Pfortaderthrombose • Leberversagen • Metastasen",
+dd:"Lebermetastasen • Leberadenom, Hämangiom, FNH • Leberabszess • Cholangiokarzinom",
+b:"AFP ↑ (alpha-Fetoprotein) • Leberwerte • Sonografie alle 6 Monate bei Zirrhose, CT/MRT",
+nf:0},
+
+{n:"Cholelithiasis / Gallenkolik",a:"Gallensteine, Gallensteinleiden",k:"leber",
+d:"Steine in der Gallenblase (Cholezystolithiasis) oder den Gallengängen (Choledocholithiasis). Gallenkolik: krampfartiger Schmerz durch Steineinklemmung.",
+u:"Cholesterinsteine (80 %): Übersättigung der Galle mit Cholesterin • Pigmentsteine: Hämolyse, Zirrhose • 6 F: female, fat, fertile, forty, fair, family • Schwangerschaft, Pille, Diabetes, rasche Gewichtsabnahme, Fasten, M. Crohn",
+s:"Meist symptomlos (stumme Steine, ~75 %) • unspezifisch: Völlegefühl, Blähungen, Fettunverträglichkeit, Druck im rechten Oberbauch • Gallenkolik: plötzliche heftige, krampfartige Schmerzen im rechten Oberbauch/Epigastrium, oft nachts oder nach fettem Essen, Ausstrahlung in die rechte Schulter/den Rücken (Head-Zone), Übelkeit, Erbrechen, Unruhe, Dauer 15 Min. bis Stunden",
+l:"Kolikartiger Schmerz im rechten Oberbauch mit Ausstrahlung in die rechte Schulter nach fettem Essen",
+ko:"Akute Cholezystitis • Choledocholithiasis → Verschlussikterus, Cholangitis • biliäre Pankreatitis • Gallenblasenhydrops, -empyem, -perforation • Gallensteinileus • Porzellangallenblase, Gallenblasenkarzinom",
+dd:"Herzinfarkt (Hinterwand!) • Ulkus • Pankreatitis • Nierenkolik rechts • Appendizitis (hochstehend) • Pneumonie rechts basal • Hepatitis",
+b:"Im Anfall meist unauffällig; bei Gangverschluss: Bilirubin (direkt) ↑, AP ↑, γ-GT ↑ • Lipase (biliäre Pankreatitis) • Leukozyten/CRP (Entzündung) • Sonografie (Methode der Wahl)",
+nf:1,nfm:"Kolik mit Fieber, Schüttelfrost, Ikterus (Cholangitis) oder starke Dauerschmerzen → Klinik/112. Nichts essen."},
+
+{n:"Akute Cholezystitis",a:"Gallenblasenentzündung",k:"leber",
+d:"Akute Entzündung der Gallenblase, in > 90 % durch Gallensteine (Verschluss des Ductus cysticus).",
+u:"Steinverschluss des Ductus cysticus → Stau, chemische Reizung → bakterielle Infektion (E. coli, Enterokokken, Klebsiellen) • steinlos (akalkulös): Intensivpatienten, Sepsis, Trauma",
+s:"Anhaltende (> 6 Std.) Schmerzen im rechten Oberbauch • Fieber • Übelkeit, Erbrechen • Murphy-Zeichen positiv (schmerzbedingter Inspirationsstopp bei Palpation unter dem rechten Rippenbogen) • lokale Abwehrspannung • tastbare Gallenblase • leichter Ikterus möglich",
+l:"Rechter Oberbauchschmerz + Fieber + positives Murphy-Zeichen",
+ko:"Gallenblasenempyem, Gangrän, Perforation → galliger Peritonitis • Abszess • Sepsis • Gallenblasen-Darm-Fistel",
+dd:"Gallenkolik • Cholangitis • Pankreatitis • Hepatitis • Ulkus(-perforation) • Appendizitis • Pyelonephritis rechts • Pneumonie • Herzinfarkt",
+b:"Leukozytose, CRP ↑ • Bilirubin, AP, γ-GT ggf. ↑ • Lipase • Sonografie (verdickte, dreigeschichtete Wand, Steine)",
+nf:2,nfm:"Klinikeinweisung (Antibiotika, OP) • nichts essen • Knierolle • bei Schock/Peritonitis 112"},
+
+{n:"Cholangitis",a:"Gallengangsentzündung",k:"leber",
+d:"Bakterielle Entzündung der Gallenwege, meist bei Abflussbehinderung. Akute eitrige Cholangitis ist lebensbedrohlich.",
+u:"Choledocholithiasis (häufigste Ursache) • Tumoren (Pankreaskopf, Gallengang), Strikturen • nach ERCP • Erreger: E. coli, Klebsiellen, Enterokokken",
+s:"Charcot-Trias: Fieber mit Schüttelfrost + Ikterus + Schmerzen im rechten Oberbauch • Reynolds-Pentade (schwer): zusätzlich Schock und Verwirrtheit",
+l:"Charcot-Trias: Fieber/Schüttelfrost, Ikterus, rechter Oberbauchschmerz",
+ko:"Urosepsis-ähnliche biliäre Sepsis, septischer Schock • Leberabszesse • Pankreatitis",
+dd:"Cholezystitis • Hepatitis • Leberabszess • Pankreatitis • Pyelonephritis",
+b:"Leukozytose, CRP/PCT ↑ • Bilirubin (direkt), AP, γ-GT ↑ • Transaminasen ↑ • Blutkulturen • Sonografie, ERCP",
+nf:2,nfm:"112/Klinik – Antibiotika und Gallenwegsdrainage (ERCP) dringend • Sepsisüberwachung"},
+
+{n:"Akute Pankreatitis",a:"Akute Bauchspeicheldrüsenentzündung",k:"leber",
+d:"Akute Entzündung der Bauchspeicheldrüse durch Selbstverdauung (Autodigestion) mit aktivierten Pankreasenzymen. Ödematöse (80 %) oder nekrotisierende Form.",
+u:"Gallensteine (biliär, ~40 %) • Alkohol (~30 %) • Hypertriglyzeridämie, Hyperkalzämie (Hyperparathyreoidismus) • nach ERCP • Medikamente (Azathioprin, Diuretika, Valproat) • Infektionen (Mumps), Trauma • idiopathisch",
+s:"Plötzlicher heftiger Oberbauchschmerz, gürtelförmig in den Rücken ausstrahlend • Übelkeit, Erbrechen • „Gummibauch“ (prall-elastische Bauchdecke, keine brettharte Abwehrspannung) • Meteorismus, paralytischer (Sub-)Ileus • Fieber • Gesichtsrötung (Flush) • Schock • Ikterus (biliär) • Hautzeichen bei Nekrose: Grey-Turner (Flanken), Cullen (Nabel) – bläuliche Verfärbung • Pleuraerguss links",
+l:"Gürtelförmiger Oberbauchschmerz mit Ausstrahlung in den Rücken + Lipase ↑",
+ko:"Schock, Multiorganversagen (ARDS, Nierenversagen) • Pankreasnekrose, infizierte Nekrose, Abszess • Pseudozysten • Blutung • Sepsis • DIC • Hypokalzämie (Tetanie) • Diabetes",
+dd:"Ulkusperforation • Gallenkolik/Cholezystitis • Herzinfarkt (Hinterwand) • Mesenterialinfarkt • Aortenaneurysma/-dissektion • Ileus • Nierenkolik",
+b:"Lipase ≥ 3-fach ↑ (spezifischer als Amylase) • Leukozytose, CRP ↑ (CRP > 150 mg/l → schwerer Verlauf) • BZ ↑, Kalzium ↓ (Prognose ungünstig) • LDH ↑ • Bilirubin, AP, γ-GT (biliär) • Triglyzeride • Kreatinin, Hkt • Sonografie, CT",
+nf:2,nfm:"112 • Nahrungskarenz, nichts trinken • Knierolle • Schockbekämpfung • Vitalzeichen"},
+
+{n:"Chronische Pankreatitis",a:"Chronische Bauchspeicheldrüsenentzündung",k:"leber",
+d:"Fortschreitende, irreversible Entzündung des Pankreas mit Fibrose und Funktionsverlust (exokrin und endokrin).",
+u:"Alkohol (~80 %) • Rauchen • genetisch, Mukoviszidose • Hyperparathyreoidismus, Hypertriglyzeridämie • Autoimmunpankreatitis • idiopathisch",
+s:"Rezidivierende/dauernde gürtelförmige Oberbauchschmerzen, nach dem Essen und Alkohol • Exokrine Insuffizienz (spät, bei > 90 % Verlust): Fettstühle (voluminös, glänzend, übelriechend), Blähungen, Gewichtsverlust, Mangel an fettlöslichen Vitaminen (A, D, E, K) • Endokrine Insuffizienz: pankreopriver Diabetes",
+l:"Rezidivierende Oberbauchschmerzen + Fettstühle + Gewichtsverlust bei Alkoholanamnese",
+ko:"Pseudozysten • Pankreasgangsteine, Verkalkungen • Gallengang-/Duodenalstenose • Milz-/Pfortaderthrombose • Diabetes mellitus • Pankreaskarzinom (Risiko ↑)",
+dd:"Pankreaskarzinom • Ulkus • Gallensteinleiden • Zöliakie, M. Crohn • Reizdarm",
+b:"Pankreas-Elastase im Stuhl ↓ • Stuhlfett ↑ • BZ/HbA1c • Lipase im Schub ↑ (später evtl. normal) • Vitamin A, D, E, K ↓ • Sonografie, CT (Verkalkungen), Endosonografie",
+nf:0},
+
+{n:"Pankreaskarzinom",a:"Bauchspeicheldrüsenkrebs",k:"leber",
+d:"Bösartiger Tumor der Bauchspeicheldrüse (meist duktales Adenokarzinom, ~70 % im Pankreaskopf). Sehr schlechte Prognose (5-Jahres-Überleben < 10 %).",
+u:"Rauchen • chronische Pankreatitis • Diabetes mellitus, Adipositas • Alkohol • familiäre Belastung, genetische Syndrome (BRCA2, Lynch) • Alter > 60",
+s:"Lange symptomlos • schmerzloser Ikterus (Pankreaskopf) mit Juckreiz, dunklem Urin, entfärbtem Stuhl • Courvoisier-Zeichen: prall tastbare, nicht schmerzhafte Gallenblase bei Ikterus • Oberbauch-/Rückenschmerzen (nachts, besser im Vorbeugen) • Gewichtsverlust, Appetitlosigkeit • neu aufgetretener Diabetes • Thrombophlebitis migrans, Thrombosen • Fettstühle",
+l:"Schmerzloser Ikterus + Gewichtsverlust beim älteren Menschen",
+ko:"Metastasen (Leber, Peritoneum) • Thromboembolien • Duodenalstenose • Kachexie",
+dd:"Chronische Pankreatitis • Choledocholithiasis • Gallengangs-/Papillenkarzinom • Hepatitis",
+b:"CA 19-9 ↑ (Verlaufsmarker) • Bilirubin (direkt), AP, γ-GT ↑ • BZ ↑ • Sonografie, CT, Endosonografie mit Biopsie",
+nf:0},
+
+{n:"Hämochromatose",a:"Eisenspeicherkrankheit, Bronzediabetes",k:"leber",
+d:"Erbliche (autosomal-rezessiv, HFE-Gen C282Y) oder erworbene vermehrte Eisenaufnahme im Darm mit Eisenablagerung in Organen (Leber, Pankreas, Herz, Haut, Gelenke, Hypophyse).",
+u:"Primär: HFE-Mutation → Hepcidinmangel → gesteigerte Eisenresorption • Sekundär: häufige Bluttransfusionen (Thalassämie), ineffektive Erythropoese, übermäßige Eisenzufuhr • Männer früher betroffen (Frauen: Menstruation schützt)",
+s:"Symptome meist ab 40.–50. Lebensjahr • Müdigkeit, Leistungsschwäche • Gelenkschmerzen (v. a. Fingergrundgelenke 2 und 3) • Hepatomegalie, später Zirrhose • Diabetes mellitus • bräunlich-graue Hautpigmentierung („Bronzediabetes“) • Kardiomyopathie, Herzrhythmusstörungen • Libido-/Potenzverlust, Amenorrhö",
+l:"Leberzirrhose + Diabetes + Hautbräunung + Gelenkschmerzen",
+ko:"Leberzirrhose, hepatozelluläres Karzinom • Herzinsuffizienz • Diabetes • Arthropathie • Hypogonadismus",
+dd:"Andere Ursachen erhöhten Ferritins (Entzündung, Fettleber, Alkohol) • Leberzirrhose anderer Genese • Rheumatoide Arthritis • M. Addison (Hyperpigmentierung)",
+b:"Transferrinsättigung > 45 % (frühester Marker), Ferritin ↑ (> 300 µg/l ♂, > 200 ♀), Serumeisen ↑ • Gentest HFE • Leberwerte, BZ • Leber-MRT",
+nf:0},
+
+{n:"Morbus Wilson",a:"Kupferspeicherkrankheit, hepatolentikuläre Degeneration",k:"leber",
+d:"Autosomal-rezessive Störung der Kupferausscheidung über die Galle → Kupferablagerung in Leber, Gehirn (Basalganglien), Auge, Niere.",
+u:"Mutation im ATP7B-Gen • Manifestation meist zwischen 5. und 35. Lebensjahr",
+s:"Leber: Hepatitis, Fettleber, Zirrhose, akutes Leberversagen (oft mit Hämolyse) • Neurologisch: Tremor („Flügelschlagen“), Dysarthrie, Bewegungsstörungen (Parkinson-ähnlich), Dystonie • Psychiatrisch: Wesensänderung, Depression, Psychose • Auge: Kayser-Fleischer-Kornealring (grün-bräunlich) • Hämolyse, Nierenschäden",
+l:"Unklare Lebererkrankung + neurologisch-psychiatrische Symptome bei jungen Menschen",
+ko:"Leberzirrhose, fulminantes Leberversagen • bleibende neurologische Schäden",
+dd:"Virushepatitis, Autoimmunhepatitis • Parkinson • Multiple Sklerose • Psychosen",
+b:"Coeruloplasmin ↓, Serumkupfer ↓ (gesamt), Kupfer im 24-Std.-Urin ↑ • Leberbiopsie (Kupfergehalt) • Gentest • Spaltlampe (Kayser-Fleischer-Ring)",
+nf:0}
+);
+
+</script>
+<script>
+(function(){
+"use strict";
+var D = (window.D || []).slice();
+var CATS = window.CATS || {};
+
+// ---------- Hilfsfunktionen ----------
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function norm(s){return String(s||"").toLowerCase().replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss").normalize("NFD").replace(/[̀-ͯ]/g,"");}
+function slug(s){return norm(s).replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");}
+function store(k,v){try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v);}catch(e){return null;}}
+// Text mit " • " als Aufzählung darstellen
+function fmt(s){
+  if(!s) return "<p>–</p>";
+  var parts=String(s).split(" • ");
+  if(parts.length>1) return "<ul>"+parts.map(function(p){return "<li>"+esc(p)+"</li>";}).join("")+"</ul>";
+  return "<p>"+esc(s)+"</p>";
+}
+D.forEach(function(d){
+  d.id=slug(d.n);
+  d._s=norm([d.n,d.a,d.d,d.u,d.s,d.l,d.ko,d.dd,d.b,d.nfm,d.bv,(CATS[d.k]||"")].join(" "));
+  d._n=norm(d.n+" "+(d.a||""));
+});
+D.sort(function(a,b){return a.n.localeCompare(b.n,"de");});
+var byId={}; D.forEach(function(d){byId[d.id]=d;});
+
+// ---------- Einstellungen ----------
+var fs=parseInt(store("hp_fs")||"17",10); if(!(fs>=13&&fs<=26)) fs=17;
+function applyFs(){document.documentElement.style.setProperty("--fs",fs+"px");store("hp_fs",String(fs));}
+applyFs();
+$("fsPlus").onclick=function(){fs=Math.min(26,fs+1);applyFs();};
+$("fsMinus").onclick=function(){fs=Math.max(13,fs-1);applyFs();};
+var th=store("hp_theme"); if(th) document.documentElement.setAttribute("data-theme",th);
+$("themeBtn").onclick=function(){
+  var cur=document.documentElement.getAttribute("data-theme");
+  var dark=cur?cur==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;
+  var nx=dark?"light":"dark"; document.documentElement.setAttribute("data-theme",nx); store("hp_theme",nx);
+};
+var favs={}; try{favs=JSON.parse(store("hp_favs")||"{}")||{};}catch(e){favs={};}
+function saveFavs(){store("hp_favs",JSON.stringify(favs));}
+
+// ---------- Zustand ----------
+var state={tab:"liste",q:"",cat:"",not:false,bv:false,fav:false};
+
+// Kategorie-Auswahl
+(function(){
+  var sel=$("catSel"), counts={};
+  D.forEach(function(d){counts[d.k]=(counts[d.k]||0)+1;});
+  var h='<option value="">Alle Organsysteme ('+D.length+')</option>';
+  Object.keys(CATS).forEach(function(k){ if(counts[k]) h+='<option value="'+k+'">'+esc(CATS[k])+' ('+counts[k]+')</option>';});
+  sel.innerHTML=h;
+  sel.onchange=function(){state.cat=sel.value;render();};
+})();
+function toggle(btn,key){btn.onclick=function(){state[key]=!state[key];btn.setAttribute("aria-pressed",state[key]);render();};}
+toggle($("fNot"),"not"); toggle($("fBv"),"bv"); toggle($("fFav"),"fav");
+var qT; $("q").addEventListener("input",function(e){clearTimeout(qT);qT=setTimeout(function(){state.q=e.target.value;render();},120);});
+
+document.querySelectorAll(".tab").forEach(function(t){
+  t.onclick=function(){setTab(t.dataset.tab);};
+});
+function setTab(tab){
+  state.tab=tab;
+  document.querySelectorAll(".tab").forEach(function(t){t.setAttribute("aria-selected",t.dataset.tab===tab);});
+  $("listControls").style.display=tab==="liste"?"":"none";
+  window.scrollTo(0,0); render();
+}
+
+// ---------- Badges ----------
+function badges(d,withCat){
+  var h="";
+  if(withCat) h+='<span class="badge b-cat">'+esc(CATS[d.k]||d.k)+'</span>';
+  if(d.nf===2) h+='<span class="badge b-red">🚨 NOTFALL</span>';
+  else if(d.nf===1) h+='<span class="badge b-amber">⚠️ kann Notfall werden</span>';
+  if(d.bv) h+='<span class="badge b-violet">⛔ Behandlungsverbot</span>';
+  return h;
+}
+function card(d){
+  return '<button class="card" data-id="'+d.id+'"><h3>'+(favs[d.id]?"★ ":"")+esc(d.n)+'</h3>'+
+    (d.a?'<div class="meta">'+esc(d.a)+'</div>':'')+
+    '<div class="badges">'+badges(d,true)+'</div>'+
+    (d.l?'<p class="ls">'+esc(d.l)+'</p>':'')+'</button>';
+}
+function bindCards(root){
+  root.querySelectorAll(".card,[data-open]").forEach(function(el){
+    el.addEventListener("click",function(){openD(el.dataset.id||el.dataset.open);});
+  });
+}
+
+// ---------- Liste ----------
+function filtered(){
+  var terms=norm(state.q).split(/\s+/).filter(Boolean);
+  var res=D.filter(function(d){
+    if(state.cat && d.k!==state.cat) return false;
+    if(state.not && !d.nf) return false;
+    if(state.bv && !d.bv) return false;
+    if(state.fav && !favs[d.id]) return false;
+    for(var i=0;i<terms.length;i++) if(d._s.indexOf(terms[i])<0) return false;
+    return true;
+  });
+  if(terms.length){
+    res.sort(function(a,b){
+      var sa=terms.every(function(t){return a._n.indexOf(t)>=0;})?0:1;
+      var sb=terms.every(function(t){return b._n.indexOf(t)>=0;})?0:1;
+      return sa-sb || a.n.localeCompare(b.n,"de");
+    });
+  }
+  return res;
+}
+function renderList(){
+  var r=filtered();
+  var h='<p class="count">'+r.length+' von '+D.length+' Erkrankungen'+(state.q?' für „'+esc(state.q)+'“':'')+'</p>';
+  if(!r.length) h+='<div class="empty">Nichts gefunden. Anderen Suchbegriff oder weniger Filter versuchen.</div>';
+  else h+='<div class="list">'+r.map(card).join("")+'</div>';
+  h+=disclaimer();
+  $("main").innerHTML=h; bindCards($("main"));
+}
+
+// ---------- Detail ----------
+var SECS=[
+  ["d","1","Kurze Definition / Erklärung"],
+  ["k","2","Kategorie / Organsystem"],
+  ["u","3","Ursachen / Pathophysiologie"],
+  ["s","4","Symptome / Leitsymptome"],
+  ["ko","5","Komplikationen"],
+  ["dd","6","Differentialdiagnosen"],
+  ["b","7","Blutwerte / Labor / Diagnostik"]
+];
+function openD(id,noPush){
+  var d=byId[id]; if(!d) return;
+  $("dTitle").textContent=d.n;
+  $("dFav").textContent=favs[d.id]?"★":"☆";
+  $("dFav").onclick=function(){ if(favs[d.id]) delete favs[d.id]; else favs[d.id]=1; saveFavs(); $("dFav").textContent=favs[d.id]?"★":"☆"; };
+  var h="";
+  if(d.a) h+='<p class="alias">Auch: '+esc(d.a)+'</p>';
+  h+='<div class="badges" style="margin-bottom:6px">'+badges(d,false)+'</div>';
+  if(d.nf) h+='<div class="alert '+(d.nf===2?"red":"amber")+'"><h4>'+(d.nf===2?"🚨 NOTFALL – sofort 112 / Notarzt":"⚠️ Kann zum Notfall werden")+'</h4>'+fmt(d.nfm||"Bei Verschlechterung sofort Notruf 112.")+'</div>';
+  if(d.bv) h+='<div class="alert violet"><h4>⛔ Behandlungsverbot für Heilpraktiker</h4>'+fmt(d.bv)+'</div>';
+  SECS.forEach(function(s){
+    var v=s[0]==="k"?(CATS[d.k]||d.k):d[s[0]];
+    h+='<div class="sec"><h4><span class="num">'+s[1]+'.</span> '+s[2]+'</h4>'+fmt(v)+
+      (s[0]==="s"&&d.l?'<div class="ls-box">Leitsymptom(e): '+esc(d.l)+'</div>':'')+'</div>';
+  });
+  h+=disclaimer();
+  $("dBody").innerHTML=h;
+  $("detail").classList.add("open"); $("detail").scrollTop=0;
+  document.body.style.overflow="hidden";
+  if(!noPush){ try{history.pushState({d:id},"","#"+id);}catch(e){} }
+}
+function closeD(){ $("detail").classList.remove("open"); document.body.style.overflow=""; if(state.tab==="liste") renderList(); }
+$("back").onclick=function(){ if(history.state&&history.state.d) history.back(); else closeD(); };
+window.addEventListener("popstate",function(e){ if(e.state&&e.state.d) openD(e.state.d,true); else closeD(); });
+document.addEventListener("keydown",function(e){ if(e.key==="Escape" && $("detail").classList.contains("open")) $("back").click(); });
+
+function disclaimer(){
+  return '<p class="disc">Lern- und Nachschlagehilfe zur Vorbereitung auf die Heilpraktikerprüfung – ersetzt kein Lehrbuch, keine ärztliche Diagnose und nicht den aktuellen Gesetzestext. Laborwerte sind Richtwerte (laborabhängig). Rechtsstand: IfSG, HeilprG, AMG, BtMG, ZHG, HebG – bei Zweifel den aktuellen Gesetzestext prüfen.</p>';
+}
+
+// ---------- Notfälle ----------
+var LEIT=[
+  ["Akuter Brustschmerz","Herzinfarkt, instabile Angina pectoris, Lungenembolie, Aortendissektion, Spannungspneumothorax, Perikarditis/Perikardtamponade, Ösophagusruptur"],
+  ["Akute Atemnot","Lungenembolie, Lungenödem, Status asthmaticus, Pneumothorax, Anaphylaxie, Epiglottitis/Pseudokrupp, Fremdkörperaspiration, Pneumonie (schwer)"],
+  ["Akuter Bauchschmerz (akutes Abdomen)","Perforation, Ileus, Appendizitis, Mesenterialinfarkt, akute Pankreatitis, rupturiertes Aortenaneurysma, Extrauteringravidität, Gallen-/Nierenkolik, Hodentorsion/Ovarialtorsion"],
+  ["Plötzlicher „Vernichtungskopfschmerz“","Subarachnoidalblutung, Hirnblutung, Meningitis, akutes Glaukom, hypertensiver Notfall, Sinusvenenthrombose"],
+  ["Lähmung, Sprach-/Sehstörung, hängender Mundwinkel","Schlaganfall/TIA (FAST-Test!), Hirnblutung, Hypoglykämie (DD!)"],
+  ["Fieber + Nackensteife + Petechien","Meningokokken-Meningitis / -Sepsis (Waterhouse-Friderichsen) – Behandlungsverbot + Notfall"],
+  ["Bewusstseinsstörung / Koma","Hypoglykämie, Ketoazidose, hyperosmolares Koma, Schlaganfall, Vergiftung, Leber-/urämisches Koma, Addison-Krise, Myxödemkoma, Krampfanfall"],
+  ["Krampfanfall > 5 Minuten","Status epilepticus, Eklampsie, Hypoglykämie, Meningitis/Enzephalitis"],
+  ["Schock (Puls ↑, RR ↓, kaltschweißig)","Blutung, Anaphylaxie, Sepsis, Herzinfarkt (kardiogen), Lungenembolie, Dehydratation"],
+  ["Bluterbrechen / Teerstuhl","Ösophagusvarizenblutung, Ulkusblutung, Mallory-Weiss-Syndrom"],
+  ["Kaltes, blasses, pulsloses Bein","Akuter arterieller Verschluss (6 P nach Pratt)"],
+  ["Geschwollenes, blau-rotes, schmerzhaftes Bein","Tiefe Beinvenenthrombose (Lungenemboliegefahr!), Phlegmasia coerulea dolens"],
+  ["Rotes, hartes, schmerzhaftes Auge + Übelkeit","Akuter Glaukomanfall"],
+  ["Plötzlicher schmerzloser Sehverlust","Zentralarterienverschluss, Netzhautablösung, Riesenzellarteriitis"],
+  ["Akuter Hodenschmerz (junger Mann)","Hodentorsion (OP binnen 4–6 Std.)"],
+  ["Schwangere mit Kopfschmerz, Sehstörung, Oberbauchschmerz","Präeklampsie/Eklampsie, HELLP-Syndrom"],
+  ["Unterbauchschmerz + ausbleibende Regel","Extrauteringravidität (Tubarruptur → Schock)"],
+  ["Suizidgedanken mit konkretem Plan","Akute Suizidalität → nicht allein lassen, 112"],
+  ["Rückenschmerz + Taubheit im Reithosenbereich + Blasenstörung","Cauda-equina-Syndrom (Notfall-OP)"]
+];
+function renderNotfall(){
+  var groups={};
+  D.filter(function(d){return d.nf===2;}).forEach(function(d){(groups[d.k]=groups[d.k]||[]).push(d);});
+  var h='<div class="panel" style="border-color:var(--red)"><h3>🚑 Grundregeln im Notfall</h3>'+
+  '<p><span class="big112">112</span> &nbsp;Notruf – Feuerwehr/Rettungsdienst (europaweit)</p>'+
+  '<ol><li><b>Eigenschutz</b>, Situation erfassen.</li>'+
+  '<li><b>Bewusstsein</b> prüfen (ansprechen, anfassen, Schmerzreiz).</li>'+
+  '<li><b>Atmung</b> prüfen (Kopf überstrecken, max. 10 Sek. sehen–hören–fühlen).</li>'+
+  '<li><b>Keine normale Atmung → 112 + Herzdruckmassage</b> 30:2 (100–120/min, 5–6 cm tief), AED holen lassen.</li>'+
+  '<li>Bewusstlos mit Atmung → <b>stabile Seitenlage</b>, ständig Atmung kontrollieren.</li>'+
+  '<li>Notruf: <b>Wo? Was? Wie viele? Welche Verletzungen/Symptome? Warten auf Rückfragen.</b></li>'+
+  '<li>Vitalzeichen überwachen (Puls, RR, Atmung, Bewusstsein, BZ), beim Patienten bleiben, beruhigen, Wärmeerhalt, <b>nichts essen/trinken</b>.</li>'+
+  '<li><b>ABCDE</b>: Airway – Breathing – Circulation – Disability (Neuro, BZ) – Exposure.</li>'+
+  '<li>Dokumentieren (Uhrzeit, Befunde, Maßnahmen) und an Rettungsdienst übergeben.</li></ol>'+
+  '<p><b>Lagerungen:</b> Schock → Beine hoch (Schocklage, nicht bei kardiogenem Schock/Lungenödem) • Atemnot/Lungenödem/Herzinfarkt → Oberkörper hoch (Herzbett, Beine tief) • akutes Abdomen → Knierolle • Schlaganfall → Oberkörper 30° • Schwangere ab 2. Hälfte → Linksseitenlage (V.-cava-Kompression).</p>'+
+  '<p><b>Merke:</b> Im Notfall darf und muss auch der Heilpraktiker Erste Hilfe leisten (§ 323c StGB – unterlassene Hilfeleistung). Auch bei Behandlungsverbot gilt die Pflicht zur Ersten Hilfe!</p></div>';
+  h+='<div class="panel"><h3>🔎 Leitsymptom → an welchen Notfall denken?</h3><div class="tscroll"><table class="t"><tr><th>Leitsymptom</th><th>Denke an</th></tr>'+
+    LEIT.map(function(r){return '<tr><td><b>'+esc(r[0])+'</b></td><td>'+esc(r[1])+'</td></tr>';}).join("")+'</table></div></div>';
+  h+='<h3 style="margin:18px 0 4px">Alle Erkrankungen, die immer ein Notfall sind ('+D.filter(function(d){return d.nf===2;}).length+')</h3>';
+  Object.keys(CATS).forEach(function(k){
+    if(!groups[k]) return;
+    h+='<div class="grp">'+esc(CATS[k])+'</div><div class="list">'+groups[k].map(card).join("")+'</div>';
+  });
+  var n1=D.filter(function(d){return d.nf===1;});
+  h+='<h3 style="margin:22px 0 4px">⚠️ Können zum Notfall werden ('+n1.length+')</h3><div class="list">'+n1.map(card).join("")+'</div>';
+  h+=disclaimer();
+  $("main").innerHTML=h; bindCards($("main"));
+}
+
+// ---------- Behandlungsverbote ----------
+function renderVerbot(){
+  var bv=D.filter(function(d){return d.bv;});
+  var h='<div class="panel" style="border-color:var(--violet)"><h3>⛔ Behandlungsverbot nach § 24 Infektionsschutzgesetz (IfSG)</h3>'+
+  '<p>Die Behandlung von Personen, die an einer der folgenden Krankheiten erkrankt <b>oder dessen verdächtig</b> sind, ist <b>nur Ärzten</b> gestattet:</p><ul>'+
+  '<li><b>§ 6 Abs. 1 Satz 1 Nr. 1 IfSG</b> – meldepflichtige Krankheiten (Verdacht, Erkrankung, Tod): Botulismus, Cholera, Diphtherie, humane spongiforme Enzephalopathie (CJK), akute Virushepatitis, HUS, virusbedingtes hämorrhagisches Fieber, Keuchhusten, Masern, Meningokokken-Meningitis/-Sepsis, Milzbrand, Mumps, Pest, Poliomyelitis, Röteln, Tollwut, Typhus/Paratyphus, Windpocken, zoonotische Influenza, Tuberkulose (Erkrankung/Tod) u. a.</li>'+
+  '<li><b>§ 6 Abs. 1 Satz 1 Nr. 2</b> – mikrobielle Lebensmittelvergiftung / akute infektiöse Gastroenteritis (bei Tätigkeit im Lebensmittelbereich oder ≥ 2 Fällen mit Zusammenhang)</li>'+
+  '<li><b>§ 6 Abs. 1 Satz 1 Nr. 5</b> – bedrohliche übertragbare Krankheiten, die nicht namentlich genannt sind</li>'+
+  '<li><b>§ 34 Abs. 1 IfSG</b> – Krankheiten in Gemeinschaftseinrichtungen (Schule, Kita): u. a. Cholera, Diphtherie, EHEC-Enteritis, hämorrhagisches Fieber, Hib-Meningitis, Impetigo contagiosa, Keuchhusten, ansteckungsfähige Lungen-TBC, Masern, Meningokokken, Mumps, Mpox (Orthopocken), Paratyphus, Pest, Polio, Röteln, Scharlach / Streptococcus-pyogenes-Infektionen, Shigellose, Skabies, Typhus, Hepatitis A/E, Windpocken, <b>Kopflausbefall</b></li>'+
+  '<li><b>§ 7 IfSG</b> – Infektion mit einem der labormeldepflichtigen Erreger (z. B. Salmonellen, Campylobacter, Noro-, Rota-, Influenza-, Hepatitis-, FSME-, Varizella-Zoster-Viren, Legionellen, Listerien, Yersinien, Giardia, Toxoplasma konnatal, HIV, Treponema pallidum, Plasmodien, Echinokokken, Gonokokken …)</li>'+
+  '<li><b>sonstige sexuell übertragbare Krankheiten</b> (z. B. Gonorrhoe, Chlamydien, Herpes genitalis, Feigwarzen, Trichomonaden, Ulcus molle)</li></ul>'+
+  '<p>Auch das Untersuchen auf diese Krankheiten (Abstriche/Erregernachweis) ist dem Heilpraktiker verboten. Bei Verdacht: <b>Patient an den Arzt verweisen</b>. Heilpraktiker sind nach § 8 Abs. 1 Nr. 8 IfSG bei Verdacht/Erkrankung nach § 6 <b>selbst meldepflichtig</b> (namentliche Meldung binnen 24 Std. an das Gesundheitsamt).</p></div>';
+  h+='<div class="panel"><h3>📜 Weitere Tätigkeitsverbote für Heilpraktiker</h3><ul>'+
+  '<li><b>Zahnheilkunde</b> (Zahnheilkundegesetz) – keine Behandlung von Zähnen, Mund- und Kieferkrankheiten im zahnärztlichen Sinn</li>'+
+  '<li><b>Geburtshilfe</b> (Hebammengesetz) – nur Hebammen und Ärzte; Ausnahme: Notfall</li>'+
+  '<li><b>Verschreibungspflichtige Arzneimittel</b> (AMG) – dürfen nicht verordnet werden</li>'+
+  '<li><b>Betäubungsmittel</b> (BtMG) – keine Verschreibung</li>'+
+  '<li><b>Röntgen / ionisierende Strahlen</b> zur Anwendung am Menschen (Strahlenschutzrecht)</li>'+
+  '<li><b>Leichenschau</b> und Ausstellen des Totenscheins; Todesfeststellung (Landesrecht)</li>'+
+  '<li><b>Impfungen</b> sowie Behandlung meldepflichtiger Tierseuchen; Ausstellen von <b>Arbeitsunfähigkeitsbescheinigungen</b> mit Wirkung für die gesetzliche Krankenversicherung</li>'+
+  '<li>Transplantationen, Schwangerschaftsabbruch, Kastration, Blut-/Plasmaspenden-Entnahme, künstliche Befruchtung (ESchG), Geschlechtsumwandlung u. a. – Arztvorbehalt</li>'+
+  '<li>Behandlung im Rahmen der gesetzlichen Unfall-/Krankenversicherung als Leistungserbringer</li></ul>'+
+  '<p><b>Sorgfaltspflicht:</b> Der Heilpraktiker muss seine Grenzen kennen und bei ernsten Erkrankungen rechtzeitig an den Arzt verweisen.</p></div>';
+  h+='<h3 style="margin:18px 0 4px">Erkrankungen mit Behandlungsverbot in dieser Sammlung ('+bv.length+')</h3><div class="list">'+bv.map(card).join("")+'</div>';
+  h+=disclaimer();
+  $("main").innerHTML=h; bindCards($("main"));
+}
+
+// ---------- Lernkarten ----------
+var lern={cat:"",only:"",cur:null,shown:{}};
+function pickCard(){
+  var pool=D.filter(function(d){
+    if(lern.cat&&d.k!==lern.cat) return false;
+    if(lern.only==="nf"&&!d.nf) return false;
+    if(lern.only==="bv"&&!d.bv) return false;
+    if(lern.only==="fav"&&!favs[d.id]) return false;
+    return true;
+  });
+  if(!pool.length){lern.cur=null;return;}
+  var c; do{c=pool[Math.floor(Math.random()*pool.length)];}while(pool.length>1&&lern.cur&&c.id===lern.cur.id);
+  lern.cur=c; lern.shown={};
+}
+function renderLern(){
+  if(!lern.cur) pickCard();
+  var catOpts='<option value="">Alle Organsysteme</option>'+Object.keys(CATS).map(function(k){return '<option value="'+k+'"'+(lern.cat===k?" selected":"")+'>'+esc(CATS[k])+'</option>';}).join("");
+  var h='<div class="filters"><select class="cat" id="lCat">'+catOpts+'</select>'+
+    '<select class="cat" id="lOnly"><option value="">Alle Karten</option><option value="nf"'+(lern.only==="nf"?" selected":"")+'>Nur Notfälle</option><option value="bv"'+(lern.only==="bv"?" selected":"")+'>Nur Behandlungsverbote</option><option value="fav"'+(lern.only==="fav"?" selected":"")+'>Nur Gemerkte</option></select></div>';
+  var c=lern.cur;
+  if(!c){h+='<div class="empty">Keine Karten für diese Auswahl.</div>';}
+  else{
+    h+='<div class="flash"><div class="meta" style="color:var(--muted);font-size:.85rem">'+esc(CATS[c.k])+'</div><h3>'+esc(c.n)+'</h3>'+
+      '<p style="color:var(--muted);margin:4px 0 0">Was weißt du dazu? Tippe auf einen Punkt zum Aufdecken.</p><div class="revbtns">';
+    var items=[["d","Definition"],["u","Ursachen"],["s","Symptome"],["l","Leitsymptom"],["ko","Komplikationen"],["dd","DD"],["b","Labor"],["nf","Notfall?"],["bv","Behandlungsverbot?"]];
+    items.forEach(function(it){ h+='<button class="btn ghost" data-rev="'+it[0]+'"'+(lern.shown[it[0]]?' style="opacity:.55"':'')+'>'+it[1]+'</button>'; });
+    h+='<button class="btn ghost" data-rev="all">Alles</button></div>';
+    items.forEach(function(it){
+      if(!lern.shown[it[0]]) return;
+      var v;
+      if(it[0]==="nf") v=c.nf===2?"JA – immer Notfall. "+(c.nfm||""):c.nf===1?"Kann zum Notfall werden. "+(c.nfm||""):"Kein typischer Notfall.";
+      else if(it[0]==="bv") v=c.bv?"JA – "+c.bv:"Kein Behandlungsverbot nach IfSG (Sorgfaltspflicht beachten).";
+      else v=c[it[0]];
+      h+='<div class="sec"><h4>'+it[1]+'</h4>'+fmt(v)+'</div>';
+    });
+    h+='<div class="revbtns"><button class="btn" id="lNext">Nächste Karte →</button><button class="btn ghost" data-open="'+c.id+'">Ganze Seite öffnen</button></div></div>';
+  }
+  $("main").innerHTML=h;
+  $("lCat").onchange=function(e){lern.cat=e.target.value;lern.cur=null;renderLern();};
+  $("lOnly").onchange=function(e){lern.only=e.target.value;lern.cur=null;renderLern();};
+  if($("lNext")) $("lNext").onclick=function(){pickCard();renderLern();};
+  $("main").querySelectorAll("[data-rev]").forEach(function(b){b.onclick=function(){
+    var r=b.dataset.rev; if(r==="all"){["d","u","s","l","ko","dd","b","nf","bv"].forEach(function(x){lern.shown[x]=1;});} else lern.shown[r]=1; renderLern();
+  };});
+  bindCards($("main"));
+}
+
+// ---------- Laborwerte ----------
+function renderLabor(){
+  var L=window.LABOR||[];
+  var h='<div class="panel"><h3>🧪 Wichtige Laborwerte (Erwachsene, Richtwerte)</h3><p style="color:var(--muted)">Referenzbereiche schwanken je nach Labor und Methode. ↑/↓ = typische Ursachen.</p></div>';
+  L.forEach(function(g){
+    h+='<div class="panel"><h3>'+esc(g.g)+'</h3><div class="tscroll"><table class="t"><tr><th>Wert</th><th>Normbereich</th><th>↑ erhöht bei</th><th>↓ erniedrigt bei</th></tr>'+
+      g.r.map(function(r){return '<tr><td><b>'+esc(r[0])+'</b></td><td>'+esc(r[1])+'</td><td>'+esc(r[2])+'</td><td>'+esc(r[3])+'</td></tr>';}).join("")+'</table></div></div>';
+  });
+  h+=disclaimer();
+  $("main").innerHTML=h;
+}
+
+function render(){
+  if(state.tab==="liste") renderList();
+  else if(state.tab==="notfall") renderNotfall();
+  else if(state.tab==="verbot") renderVerbot();
+  else if(state.tab==="lern") renderLern();
+  else if(state.tab==="labor") renderLabor();
+}
+render();
+var h0=location.hash.replace("#",""); if(h0&&byId[h0]){ try{history.replaceState(null,"",location.pathname);}catch(e){} openD(h0); }
+})();
+
+</script>
+</body>
+</html>

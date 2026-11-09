@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cut">
+<title>Krankheiten Nachschlagewerk</title>
+<meta name="description" content="Offline-Nachschlagewerk für Heilpraktiker: Definition, Organsystem, Ursachen, Symptome, Komplikationen, Differentialdiagnosen, Laborwerte, Notfälle und Behandlungsverbote.">
+<style>
+:root{
+  --bg:#f6f4ef; --surface:#ffffff; --surface2:#efece5; --text:#1f2328; --muted:#5d6670;
+  --line:#ddd8cc; --accent:#2f6f5e; --accent-weak:#e1eee9;
+  --red:#b42318; --red-weak:#fde8e6; --amber:#9a5b00; --amber-weak:#fff3d6;
+  --violet:#5b3a9e; --violet-weak:#eee8fa; --shadow:0 1px 2px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.05);
+  --fs:17px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15181b; --surface:#1d2125; --surface2:#262b30; --text:#e8eaed; --muted:#a2aab3;
+    --line:#343a41; --accent:#6cc4a8; --accent-weak:#1f3530;
+    --red:#ff7a6e; --red-weak:#3a1f1d; --amber:#f0b54a; --amber-weak:#352a14;
+    --violet:#b79cf5; --violet-weak:#2b2340; --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15181b; --surface:#1d2125; --surface2:#262b30; --text:#e8eaed; --muted:#a2aab3;
+  --line:#343a41; --accent:#6cc4a8; --accent-weak:#1f3530;
+  --red:#ff7a6e; --red-weak:#3a1f1d; --amber:#f0b54a; --amber-weak:#352a14;
+  --violet:#b79cf5; --violet-weak:#2b2340; --shadow:none;
+}
+*{box-sizing:border-box}
+html{font-size:var(--fs);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.5}
+button,input,select{font:inherit;color:inherit}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+header.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+.titlebar{display:flex;align-items:center;gap:10px;padding:10px 0 6px}
+.titlebar h1{font-size:1.15rem;margin:0;flex:1;letter-spacing:-.01em}
+.iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:6px 10px;cursor:pointer;min-width:40px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{white-space:nowrap;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;cursor:pointer;font-weight:600;font-size:.92rem}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .tab[aria-selected="true"]{color:#0d1a16}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tab[aria-selected="true"]{color:#0d1a16}}
+.search{display:flex;gap:8px;padding-bottom:10px}
+.search input{flex:1;min-width:0;border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 14px;font-size:1rem}
+.search input:focus{outline:none;border-color:var(--accent)}
+.filters{display:flex;flex-wrap:wrap;gap:6px;padding-bottom:10px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 11px;font-size:.84rem;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent-weak);border-color:var(--accent);color:var(--accent);font-weight:600}
+.chip.red[aria-pressed="true"]{background:var(--red-weak);border-color:var(--red);color:var(--red)}
+.chip.violet[aria-pressed="true"]{background:var(--violet-weak);border-color:var(--violet);color:var(--violet)}
+select.cat{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 10px;font-size:.84rem;max-width:100%}
+main{padding:14px 0 60px}
+.count{color:var(--muted);font-size:.85rem;margin:0 0 10px}
+.list{display:grid;gap:10px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow);cursor:pointer;text-align:left;width:100%}
+.card:hover{border-color:var(--accent)}
+.card h3{margin:0 0 2px;font-size:1.02rem}
+.card .meta{color:var(--muted);font-size:.82rem}
+.card .ls{margin:6px 0 0;font-size:.9rem;color:var(--text);opacity:.9;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.badge{font-size:.74rem;font-weight:700;border-radius:6px;padding:2px 7px;letter-spacing:.01em}
+.b-red{background:var(--red-weak);color:var(--red)}
+.b-amber{background:var(--amber-weak);color:var(--amber)}
+.b-violet{background:var(--violet-weak);color:var(--violet)}
+.b-cat{background:var(--surface2);color:var(--muted)}
+/* Detail */
+.detail{position:fixed;inset:0;z-index:50;background:var(--bg);overflow-y:auto;display:none}
+.detail.open{display:block}
+.dhead{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top);z-index:2}
+.dhead .wrap{display:flex;align-items:center;gap:10px;padding-top:10px;padding-bottom:10px}
+.dhead h2{margin:0;font-size:1.15rem;flex:1;line-height:1.25}
+.dbody{padding:14px 0 70px}
+.alias{color:var(--muted);font-size:.9rem;margin:0 0 10px}
+.alert{border-radius:12px;padding:10px 14px;margin:10px 0;border:1.5px solid}
+.alert h4{margin:0 0 4px;font-size:.95rem}
+.alert p{margin:0;font-size:.93rem}
+.alert.red{background:var(--red-weak);border-color:var(--red)}
+.alert.red h4{color:var(--red)}
+.alert.amber{background:var(--amber-weak);border-color:var(--amber)}
+.alert.amber h4{color:var(--amber)}
+.alert.violet{background:var(--violet-weak);border-color:var(--violet)}
+.alert.violet h4{color:var(--violet)}
+.sec{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0}
+.sec h4{margin:0 0 6px;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+.sec h4 .num{display:inline-block;min-width:1.4em}
+.sec p{margin:0}
+.sec ul{margin:0;padding-left:1.15em}
+.sec li{margin:2px 0}
+.ls-box{background:var(--accent-weak);border-radius:10px;padding:8px 12px;margin-top:8px;font-weight:600}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:0 0 12px}
+.panel h3{margin:0 0 8px;font-size:1.05rem}
+.panel p,.panel li{font-size:.95rem}
+.panel ul,.panel ol{padding-left:1.2em;margin:6px 0}
+table.t{width:100%;border-collapse:collapse;font-size:.9rem}
+table.t th,table.t td{border-top:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+table.t th{color:var(--muted);font-weight:600;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em}
+.tscroll{overflow-x:auto}
+a.lnk{color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.big112{font-size:1.6rem;font-weight:800;color:var(--red)}
+.grp{margin:16px 0 6px;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.flash{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow)}
+.flash h3{margin:0 0 4px;font-size:1.3rem}
+.revbtns{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.btn{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:10px;padding:8px 14px;cursor:pointer;font-weight:600}
+.btn.ghost{background:transparent;color:var(--accent)}
+.empty{color:var(--muted);text-align:center;padding:30px 0}
+.disc{font-size:.8rem;color:var(--muted);margin-top:20px;line-height:1.45}
+mark{background:var(--amber-weak);color:inherit;border-radius:3px;padding:0 1px}
+.fav{border:none;background:none;font-size:1.3rem;cursor:pointer;padding:4px;line-height:1}
+@media (min-width:720px){.list{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="titlebar">
+      <h1>🩺 Krankheiten-Nachschlagewerk</h1>
+      <button class="iconbtn" id="fsMinus" title="Schrift kleiner" aria-label="Schrift kleiner">A−</button>
+      <button class="iconbtn" id="fsPlus" title="Schrift größer" aria-label="Schrift größer">A+</button>
+      <button class="iconbtn" id="themeBtn" title="Hell/Dunkel" aria-label="Hell/Dunkel umschalten">◐</button>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" data-tab="liste" aria-selected="true">📚 Erkrankungen</button>
+      <button class="tab" role="tab" data-tab="notfall" aria-selected="false">🚨 Notfälle</button>
+      <button class="tab" role="tab" data-tab="verbot" aria-selected="false">⛔ Behandlungsverbote</button>
+      <button class="tab" role="tab" data-tab="lern" aria-selected="false">🃏 Lernkarten</button>
+      <button class="tab" role="tab" data-tab="labor" aria-selected="false">🧪 Laborwerte</button>
+    </div>
+    <div id="listControls">
+      <div class="search"><input id="q" type="search" placeholder="Suche: Name, Symptom, Laborwert … z. B. „Brustschmerz“" autocomplete="off"></div>
+      <div class="filters">
+        <select class="cat" id="catSel" aria-label="Organsystem"></select>
+        <button class="chip red" id="fNot" aria-pressed="false">🚨 Notfall</button>
+        <button class="chip violet" id="fBv" aria-pressed="false">⛔ Behandlungsverbot</button>
+        <button class="chip" id="fFav" aria-pressed="false">★ Gemerkt</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="main"></main>
+
+<section class="detail" id="detail" aria-modal="true" role="dialog">
+  <div class="dhead"><div class="wrap">
+    <button class="iconbtn" id="back" aria-label="Zurück">←</button>
+    <h2 id="dTitle"></h2>
+    <button class="fav" id="dFav" aria-label="Merken">☆</button>
+  </div></div>
+  <div class="wrap dbody" id="dBody"></div>
+</section>
+
+<script>
+/*__DATA__*/
+</script>
+<script>
+/*__APP__*/
+</script>
+</body>
+</html>
