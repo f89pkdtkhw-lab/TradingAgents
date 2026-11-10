@@ -19,8 +19,10 @@ Weitere Bereiche: Notfall-Grundregeln und Leitsymptom-Tabelle, Übersicht aller 
 Die **eine Datei `Krankheiten-Nachschlagewerk.html`** enthält alles.
 
 - **PC/Mac:** Datei herunterladen und doppelt anklicken, sie öffnet sich im Browser.
-- **iPhone/iPad:** Datei per AirDrop, Mail oder Messenger schicken → in „Dateien“ sichern → antippen. Sie öffnet sich in der Vorschau. Für die volle Funktion über „Teilen → In Safari öffnen“ (bzw. Chrome) öffnen.
-- **Android:** Datei per Mail/Messenger/USB aufs Gerät → in „Downloads“ antippen → mit Chrome öffnen.
+- **iPhone/iPad:** Datei per AirDrop, Mail oder Messenger schicken → in „Dateien“ sichern → antippen. In der Vorschau erscheint die **einfache Ansicht** (alle Erkrankungen zum Aufklappen, Sprungmarken zu Notfällen, Behandlungsverboten, Laborwerten). Für **Suche, Filter und Lernkarten**: Teilen-Symbol → „In Safari öffnen“ bzw. „Öffnen mit …“.
+- **Android:** Datei aufs Gerät → in „Downloads“ antippen → mit **Chrome** öffnen (volle Funktion). Andere Viewer zeigen die einfache Ansicht.
+
+Die Datei enthält den kompletten Inhalt zweimal: einmal fest als lesbares HTML (funktioniert auch dort, wo kein JavaScript läuft) und einmal als interaktive App.
 
 Tipp: Einmal öffnen und im Browser als Lesezeichen/„Zum Home-Bildschirm“ speichern.
 
@@ -28,10 +30,10 @@ Funktionen: Volltextsuche (z. B. „Brustschmerz“, „Nackensteife“, „Lipa
 
 ## Inhalte ändern
 
-Die Daten liegen in `src/data/*.js` (eine Datei pro Organsystem), die Oberfläche in `src/app.html` und `src/app.js`. Nach Änderungen neu bauen:
+Die Daten liegen in `src/data/*.js` (eine Datei pro Organsystem), die Oberfläche in `src/app.html`, `src/shared.js` und `src/app.js`. Nach Änderungen neu bauen (Node.js nötig):
 
 ```
-python3 build.py
+node build.js
 ```
 
 ## Hinweis
