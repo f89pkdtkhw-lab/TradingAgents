@@ -46,12 +46,15 @@ header.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1
 .search input{flex:1;min-width:0;border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:10px 14px;font-size:1rem}
 .search input:focus{outline:none;border-color:var(--accent)}
 .filters{display:flex;flex-wrap:wrap;gap:6px;padding-bottom:10px}
+#listControls .filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+#listControls .filters::-webkit-scrollbar{display:none}
+#listControls .filters>*{flex:0 0 auto}
 .chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 11px;font-size:.84rem;cursor:pointer}
 .chip[aria-pressed="true"]{background:var(--accent-weak);border-color:var(--accent);color:var(--accent);font-weight:600}
 .chip.red[aria-pressed="true"]{background:var(--red-weak);border-color:var(--red);color:var(--red)}
 .chip.violet[aria-pressed="true"]{background:var(--violet-weak);border-color:var(--violet);color:var(--violet)}
 select.cat{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 10px;font-size:.84rem;max-width:100%}
-main{padding:14px 0 60px}
+main{padding-top:14px;padding-bottom:60px}
 .count{color:var(--muted);font-size:.85rem;margin:0 0 10px}
 .list{display:grid;gap:10px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow);cursor:pointer;text-align:left;width:100%}
@@ -71,7 +74,7 @@ main{padding:14px 0 60px}
 .dhead{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top);z-index:2}
 .dhead .wrap{display:flex;align-items:center;gap:10px;padding-top:10px;padding-bottom:10px}
 .dhead h2{margin:0;font-size:1.15rem;flex:1;line-height:1.25}
-.dbody{padding:14px 0 70px}
+.dbody{padding-top:14px;padding-bottom:70px}
 .alias{color:var(--muted);font-size:.9rem;margin:0 0 10px}
 .alert{border-radius:12px;padding:10px 14px;margin:10px 0;border:1.5px solid}
 .alert h4{margin:0 0 4px;font-size:.95rem}
@@ -110,6 +113,7 @@ a.lnk{color:var(--accent);cursor:pointer;text-decoration:underline;text-underlin
 mark{background:var(--amber-weak);color:inherit;border-radius:3px;padding:0 1px}
 .fav{border:none;background:none;font-size:1.3rem;cursor:pointer;padding:4px;line-height:1}
 @media (min-width:720px){.list{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.titlebar h1{font-size:1rem}.iconbtn{padding:5px 8px;min-width:36px}.titlebar{padding-top:8px}.tabs{padding-bottom:8px}.search{padding-bottom:8px}}
 </style>
 </head>
 <body>
